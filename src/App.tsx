@@ -39,7 +39,7 @@ import { OfflineDraftManager } from './utils/offlineDraftManager';
 const AppContent: React.FC = () => {
   const { t, language } = useLanguage();
   const { toast, showToast, addNotification } = useNotifications();
-  const { theme, resolvedTheme } = useTheme();
+  const { theme } = useTheme();
 
   // Role Context State
   const [activeRole, setActiveRole] = useState<UserRoleContext>('NOC_SUPER_ADMIN');
@@ -230,6 +230,106 @@ const AppContent: React.FC = () => {
     setProvinces(prev => prev.map(p => p.id === provId ? { ...p, monthlyQuotaMT: newQuota } : p));
   };
 
+  // Cross-Role Lifecycle: Plant Outbound Dispatch
+  const handlePlantDispatchCreated = (dispatchData: any) => {
+    setMetrics(m => ({ ...m, cylindersDispatchedCount: m.cylindersDispatchedCount + dispatchData.quantity }));
+
+    const newActivity: ActivityLog = {
+      id: `ACT-${Date.now().toString().slice(-4)}`,
+      timestamp: new Date().toISOString(),
+      category: 'DISPATCH',
+      actor: {
+        name: 'Bikash Karki',
+        role: 'Plant Dispatch Officer',
+        org: 'Nepal Gas Udyog Ltd. (Balaju)',
+      },
+      action: `Plant Outbound Gate Pass Issued: ${dispatchData.id}`,
+      details: `${dispatchData.quantity} cylinders dispatched to ${dispatchData.receiver} on truck ${dispatchData.vehicle}. Barcode seal #${dispatchData.tamperSeal}`,
+      referenceId: dispatchData.id,
+      status: 'SUCCESS',
+    };
+    setActivityLogs(prev => [newActivity, ...prev]);
+    showToast(`Consignment ${dispatchData.id} recorded in national dispatch ledger.`, 'success');
+  };
+
+  // Cross-Role Lifecycle: Distributor Inbound Receiving Bay Intake
+  const handleDistributorConfirmedDelivery = (consignmentCode: string, receivedCount: number, missingSerials: string[]) => {
+    const isMismatch = missingSerials.length > 0 || receivedCount < 800;
+
+    if (isMismatch) {
+      const varianceQty = 800 - receivedCount;
+      const newCaseId = `DSC-2083-${Math.floor(100 + Math.random() * 900)}`;
+      const newDiscrepancy: DiscrepancyRecord = {
+        id: newCaseId,
+        consignmentId: consignmentCode,
+        sourceEntity: {
+          id: 'PLANT-001',
+          name: 'Nepal Gas Udyog Ltd.',
+          type: 'BOTTLING_PLANT',
+          location: 'Balaju Industrial Area, Kathmandu',
+          province: 'Bagmati Province',
+        },
+        destinationEntity: {
+          id: 'DIST-0042',
+          name: 'Patan Traders & Energy Suppliers',
+          type: 'DISTRIBUTOR',
+          location: 'Lagankhel, Lalitpur',
+          province: 'Bagmati Province',
+        },
+        dispatchedAt: new Date().toISOString(),
+        receivedAt: new Date().toISOString(),
+        expectedQty: 800,
+        dispatchedQty: 800,
+        receivedQty: receivedCount,
+        varianceQty: -Math.abs(varianceQty),
+        unmatchedSerials: missingSerials,
+        status: 'UNDER_INVESTIGATION',
+        severity: varianceQty > 20 ? 'CRITICAL' : 'HIGH',
+        assignedOfficer: 'Er. Rajesh K. Shrestha (NOC Tech Cell)',
+        lastUpdated: new Date().toISOString(),
+        initialRemarks: `Receiving bay scan detected ${varianceQty} missing or unreadable valve tags (${missingSerials.join(', ') || 'barcode unreadable'}). Flagged for formal NOC investigation.`,
+        investigationNotes: [
+          {
+            id: `NOTE-${Date.now()}`,
+            timestamp: new Date().toISOString(),
+            author: 'Patan Receiving Supervisor',
+            role: 'Distributor Receiving Officer',
+            note: `Inbound conveyor bay verified ${receivedCount} compliant units out of 800 expected. ${varianceQty} units unlocated or tags unreadable.`,
+            statusChange: 'UNDER_INVESTIGATION',
+          }
+        ],
+      };
+
+      setDiscrepancies(prev => [newDiscrepancy, ...prev]);
+      setMetrics(m => ({ ...m, activeDiscrepanciesCount: m.activeDiscrepanciesCount + 1 }));
+
+      const newSeq = auditTrail.length > 0 ? auditTrail[0].sequenceNumber + 1 : 1000;
+      const newAuditEntry: AuditTrailEntry = {
+        id: `AUD-${Date.now().toString().slice(-5)}`,
+        sequenceNumber: newSeq,
+        timestamp: new Date().toISOString(),
+        actorId: 'DIST-USR-102',
+        actorName: 'Patan Receiving Supervisor',
+        actorRole: 'DISTRIBUTOR',
+        actionType: 'RECEIVING_VARIANCE_FLAGGED',
+        targetResource: `${consignmentCode} (${newCaseId})`,
+        newState: `RECEIVED: ${receivedCount}/800; MISSING_TAGS: ${missingSerials.length}`,
+        ipAddress: '103.10.235.91 (Lagankhel Wholesale Bay)',
+        deviceFingerprint: 'RFID-CONVEYOR-UNIT-04',
+        tamperProofHash: Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join(''),
+      };
+      setAuditTrail(prev => [newAuditEntry, ...prev]);
+
+      addNotification({
+        title: 'Discrepancy Auto-Flagged at Receiving Bay',
+        description: `Consignment ${consignmentCode} received with ${varianceQty} missing units. Case ${newCaseId} created for NOC review.`,
+        type: 'WARNING',
+      });
+    } else {
+      setMetrics(m => ({ ...m, cylindersConfirmedReceivedCount: m.cylindersConfirmedReceivedCount + receivedCount }));
+    }
+  };
+
   // Live Sync Trigger
   const handleTriggerSync = () => {
     setIsSyncing(true);
@@ -354,12 +454,12 @@ const AppContent: React.FC = () => {
           
           {/* 1. PLANT OPERATOR VIEW */}
           {activeRole === 'PLANT_OPERATOR' && (
-            <PlantOperatorPortal />
+            <PlantOperatorPortal onDispatchCreated={handlePlantDispatchCreated} />
           )}
 
           {/* 2. DISTRIBUTOR VIEW */}
           {activeRole === 'DISTRIBUTOR_MANAGER' && (
-            <DistributorPortal />
+            <DistributorPortal onConfirmDelivery={handleDistributorConfirmedDelivery} />
           )}
 
           {/* 3. RETAILER VIEW */}

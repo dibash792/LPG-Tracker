@@ -11,8 +11,7 @@
       (function() {
         try {
           var saved = localStorage.getItem('lpg_theme');
-          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          if (saved === 'dark' || (!saved && prefersDark) || (saved === 'system' && prefersDark)) {
+          if (saved === 'dark') {
             document.documentElement.classList.add('dark');
             document.documentElement.style.colorScheme = 'dark';
           } else {

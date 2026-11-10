@@ -53,3 +53,4 @@ export class OfflineDraftManager {
     return this.getDrafts().filter(d => d.status === 'PENDING_SYNC').length;
   }
 }
+

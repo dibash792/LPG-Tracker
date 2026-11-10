@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useNotifications } from '../../context/NotificationContext';
-import { 
-  Store, 
-  Boxes, 
-  CheckCircle2, 
-  Plus, 
-  Minus, 
-  Radio, 
-  Clock, 
-  AlertTriangle, 
+import {
+  Store,
+  Boxes,
+  CheckCircle2,
+  Plus,
+  Minus,
+  Radio,
+  Clock,
+  AlertTriangle,
   FileText,
   MapPin,
   Check,
@@ -59,8 +59,8 @@ export const RetailerPortal: React.FC = () => {
     const nextState = !isPublicBeaconActive;
     setIsPublicBeaconActive(nextState);
     showToast(
-      nextState 
-        ? 'Public Availability Beacon Active: Citizens can view your stock status.' 
+      nextState
+        ? 'Public Availability Beacon Active: Citizens can view your stock status.'
         : 'Public Availability Beacon Paused.',
       'info'
     );
@@ -68,7 +68,7 @@ export const RetailerPortal: React.FC = () => {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
-      
+
       {/* Retailer Store Badge */}
       <div className="bg-white dark:bg-brand-900 rounded-2xl p-6 shadow-card border border-slate-200 dark:border-brand-800 transition-colors">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -141,11 +141,10 @@ export const RetailerPortal: React.FC = () => {
 
             <button
               onClick={handleToggleBeacon}
-              className={`px-2.5 py-1 text-xs font-bold rounded-lg transition-colors ${
-                isPublicBeaconActive 
-                  ? 'bg-flame-600 hover:bg-flame-500 text-white' 
+              className={`px-2.5 py-1 text-xs font-bold rounded-lg transition-colors ${isPublicBeaconActive
+                  ? 'bg-flame-600 hover:bg-flame-500 text-white'
                   : 'bg-slate-700 text-slate-300'
-              }`}
+                }`}
             >
               {isPublicBeaconActive ? 'Broadcasting Active' : 'Offline'}
             </button>
