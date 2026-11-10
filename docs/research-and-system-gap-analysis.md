@@ -110,3 +110,4 @@ According to NOC's published regulatory framework and public portal (`noc.org.np
 2. **Partial Consignment Offloading**: Are multi-drop dispatches (one truck offloading at two distinct distributors along a highway corridor) currently permitted under NOC transport contracts?
 3. **Cylinder Category Standardization**: Beyond the standard 14.2 kg domestic cylinder, how should 19.0 kg commercial cylinders and 5.0 kg rural/mountain cylinders be segregated in the provincial quota balance?
 4. **Offline Transit Buffer**: What is the acceptable offline synchronization window for distributors operating in remote mountain districts (e.g., Jumla, Dolpa, Mustang) where internet connectivity may be absent for 24–48 hours?
+

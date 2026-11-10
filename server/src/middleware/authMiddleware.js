@@ -66,3 +66,4 @@ export const enforceOrganizationBoundary = (req, res, next) => {
   req.userOrganization = userOrg;
   next();
 };
+

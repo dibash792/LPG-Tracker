@@ -101,33 +101,33 @@ export const PlantOperatorPortal: React.FC<PlantOperatorPortalProps> = ({ onDisp
     <div className="space-y-6">
       
       {/* Plant Identity Banner */}
-      <div className="bg-white rounded-2xl p-6 shadow-card border border-slate-200">
+      <div className="bg-white dark:bg-brand-900 rounded-2xl p-6 shadow-card border border-slate-200 dark:border-brand-800 transition-colors">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 rounded-xl bg-navy-900 text-teal-400 flex items-center justify-center font-bold text-lg shadow-sm">
+            <div className="w-12 h-12 rounded-xl bg-flame-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">
               <Building2 className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h2 className="text-lg font-bold text-navy-950">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
                   Nepal Gas Udyog Ltd. — Balaju Industrial Facility
                 </h2>
-                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
                   Licensed Plant BP-2051/01
                 </span>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Bagmati Province • Kathmandu Metro Ward 16 • SCADA Telemetry Node #BP-01
               </p>
             </div>
           </div>
 
           {/* Plant Mode Tabs */}
-          <div className="flex items-center space-x-1.5 bg-slate-100 p-1 rounded-xl text-xs font-semibold">
+          <div className="flex items-center space-x-1.5 bg-slate-100 dark:bg-brand-950 p-1 rounded-xl text-xs font-semibold border border-slate-200/50 dark:border-brand-800">
             <button
               onClick={() => setActiveTab('OVERVIEW')}
               className={`px-3 py-1.5 rounded-lg transition-all ${
-                activeTab === 'OVERVIEW' ? 'bg-navy-800 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                activeTab === 'OVERVIEW' ? 'bg-brand-900 dark:bg-brand-800 text-white shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
               Overview
@@ -135,7 +135,7 @@ export const PlantOperatorPortal: React.FC<PlantOperatorPortalProps> = ({ onDisp
             <button
               onClick={() => setActiveTab('BULK_RECEIPT')}
               className={`px-3 py-1.5 rounded-lg transition-all ${
-                activeTab === 'BULK_RECEIPT' ? 'bg-navy-800 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                activeTab === 'BULK_RECEIPT' ? 'bg-brand-900 dark:bg-brand-800 text-white shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
               Log Bulk Decanting
@@ -143,7 +143,7 @@ export const PlantOperatorPortal: React.FC<PlantOperatorPortalProps> = ({ onDisp
             <button
               onClick={() => setActiveTab('DISPATCH')}
               className={`px-3 py-1.5 rounded-lg transition-all ${
-                activeTab === 'DISPATCH' ? 'bg-navy-800 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                activeTab === 'DISPATCH' ? 'bg-brand-900 dark:bg-brand-800 text-white shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
               Create Dispatch
@@ -151,7 +151,7 @@ export const PlantOperatorPortal: React.FC<PlantOperatorPortalProps> = ({ onDisp
             <button
               onClick={() => setActiveTab('CAROUSEL')}
               className={`px-3 py-1.5 rounded-lg transition-all ${
-                activeTab === 'CAROUSEL' ? 'bg-navy-800 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                activeTab === 'CAROUSEL' ? 'bg-brand-900 dark:bg-brand-800 text-white shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
               Carousel Telemetry
@@ -164,37 +164,37 @@ export const PlantOperatorPortal: React.FC<PlantOperatorPortalProps> = ({ onDisp
       {activeTab === 'OVERVIEW' && (
         <div className="space-y-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">Bulk LPG Tank Farm</span>
-              <div className="text-2xl font-bold font-mono text-navy-950 mt-1">1,480 MT</div>
-              <span className="text-[11px] text-teal-600 block mt-0.5">82.4% tank capacity</span>
+            <div className="bg-white dark:bg-brand-900 p-5 rounded-2xl border border-slate-200 dark:border-brand-800 shadow-card transition-colors">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">Bulk LPG Tank Farm</span>
+              <div className="text-2xl font-bold font-mono text-slate-900 dark:text-slate-100 mt-1">1,480 MT</div>
+              <span className="text-[11px] text-flame-600 dark:text-flame-400 block mt-0.5 font-medium">82.4% tank capacity</span>
             </div>
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">Filled Stock in Yard</span>
-              <div className="text-2xl font-bold font-mono text-navy-950 mt-1">31,200 Units</div>
-              <span className="text-[11px] text-slate-500 block mt-0.5">Ready for wholesale transit</span>
+            <div className="bg-white dark:bg-brand-900 p-5 rounded-2xl border border-slate-200 dark:border-brand-800 shadow-card transition-colors">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">Filled Stock in Yard</span>
+              <div className="text-2xl font-bold font-mono text-slate-900 dark:text-slate-100 mt-1">31,200 Units</div>
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">Ready for wholesale transit</span>
             </div>
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">Today's Carousel Filling</span>
-              <div className="text-2xl font-bold font-mono text-teal-600 mt-1">4,280 Units</div>
-              <span className="text-[11px] text-slate-500 block mt-0.5">Day Shift • 24-Head Carousel</span>
+            <div className="bg-white dark:bg-brand-900 p-5 rounded-2xl border border-slate-200 dark:border-brand-800 shadow-card transition-colors">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">Today's Carousel Filling</span>
+              <div className="text-2xl font-bold font-mono text-flame-600 dark:text-flame-400 mt-1">4,280 Units</div>
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">Day Shift • 24-Head Carousel</span>
             </div>
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">Tare Scale Compliance</span>
-              <div className="text-2xl font-bold font-mono text-emerald-600 mt-1">99.4%</div>
-              <span className="text-[11px] text-slate-500 block mt-0.5">NS:533 ±100g margin</span>
+            <div className="bg-white dark:bg-brand-900 p-5 rounded-2xl border border-slate-200 dark:border-brand-800 shadow-card transition-colors">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">Tare Scale Compliance</span>
+              <div className="text-2xl font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-1">99.4%</div>
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">NS:533 ±100g margin</span>
             </div>
           </div>
 
           {/* Plant Dispatches Table */}
-          <div className="bg-white rounded-2xl shadow-card border border-slate-200 p-6 space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h3 className="text-sm font-bold text-navy-950">
+          <div className="bg-white dark:bg-brand-900 rounded-2xl shadow-card border border-slate-200 dark:border-brand-800 p-6 space-y-4 transition-colors">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-brand-800">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
                 Recent Plant Dispatches & Waybill Gate Passes
               </h3>
               <button
                 onClick={() => setActiveTab('DISPATCH')}
-                className="px-3 py-1.5 text-xs font-bold bg-navy-800 text-white rounded-lg flex items-center space-x-1"
+                className="px-3 py-1.5 text-xs font-bold bg-flame-600 hover:bg-flame-500 text-white rounded-lg flex items-center space-x-1 shadow-2xs"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>New Consignment</span>
@@ -204,7 +204,7 @@ export const PlantOperatorPortal: React.FC<PlantOperatorPortalProps> = ({ onDisp
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200 text-[10px] font-bold uppercase text-slate-500">
+                  <tr className="bg-slate-50 dark:bg-brand-950 border-b border-slate-200 dark:border-brand-800 text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400">
                     <th className="py-2.5 px-3">Gate Pass / Code</th>
                     <th className="py-2.5 px-3">Authorized Distributor</th>
                     <th className="py-2.5 px-3">Vehicle</th>
@@ -213,21 +213,21 @@ export const PlantOperatorPortal: React.FC<PlantOperatorPortalProps> = ({ onDisp
                     <th className="py-2.5 px-3">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-brand-800">
                   {recentDispatches.map((d) => (
-                    <tr key={d.id} className="hover:bg-slate-50">
-                      <td className="py-3 px-3 font-mono font-bold text-navy-950">{d.id}</td>
-                      <td className="py-3 px-3 font-medium text-slate-800">{d.receiver}</td>
-                      <td className="py-3 px-3 font-mono text-slate-600">{d.vehicle}</td>
-                      <td className="py-3 px-3 text-center font-mono font-bold">{d.quantity}</td>
-                      <td className="py-3 px-3 font-mono text-[11px] text-slate-500">{d.tamperSeal}</td>
+                    <tr key={d.id} className="hover:bg-slate-50 dark:hover:bg-brand-850/60">
+                      <td className="py-3 px-3 font-mono font-bold text-slate-900 dark:text-slate-100">{d.id}</td>
+                      <td className="py-3 px-3 font-medium text-slate-800 dark:text-slate-200">{d.receiver}</td>
+                      <td className="py-3 px-3 font-mono text-slate-600 dark:text-slate-300">{d.vehicle}</td>
+                      <td className="py-3 px-3 text-center font-mono font-bold text-slate-900 dark:text-slate-100">{d.quantity}</td>
+                      <td className="py-3 px-3 font-mono text-[11px] text-slate-500 dark:text-slate-400">{d.tamperSeal}</td>
                       <td className="py-3 px-3">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
                           d.status === 'DELIVERED_CONFIRMED'
-                            ? 'bg-emerald-50 text-emerald-800'
+                            ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
                             : d.status === 'DELIVERED_DISCREPANCY'
-                              ? 'bg-amber-50 text-amber-900 font-bold'
-                              : 'bg-sky-50 text-sky-800'
+                              ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 font-bold border border-amber-200 dark:border-amber-800'
+                              : 'bg-brand-50 dark:bg-brand-800/60 text-brand-800 dark:text-brand-300 border border-brand-200 dark:border-brand-700'
                         }`}>
                           {d.status}
                         </span>
@@ -243,12 +243,12 @@ export const PlantOperatorPortal: React.FC<PlantOperatorPortalProps> = ({ onDisp
 
       {/* BULK DECANTING TAB */}
       {activeTab === 'BULK_RECEIPT' && (
-        <div className="bg-white rounded-2xl p-6 shadow-card border border-slate-200 max-w-2xl mx-auto space-y-4">
-          <div className="border-b border-slate-100 pb-3">
-            <h3 className="text-base font-bold text-navy-950">
+        <div className="bg-white dark:bg-brand-900 rounded-2xl p-6 shadow-card border border-slate-200 dark:border-brand-800 max-w-2xl mx-auto space-y-4 transition-colors">
+          <div className="border-b border-slate-100 dark:border-brand-800 pb-3">
+            <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
               Bulk Cryogenic LPG Tanker Decanting Entry
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Record receipt of liquid petroleum gas decanted from cross-border Indian Oil bullet tanker into plant mounded pressure vessels.
             </p>
           </div>
@@ -256,72 +256,72 @@ export const PlantOperatorPortal: React.FC<PlantOperatorPortalProps> = ({ onDisp
           <form onSubmit={handleBulkSubmit} className="space-y-4 text-xs">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Bullet Tanker Reg Number:</label>
+                <label className="font-bold text-slate-700 dark:text-slate-200 block mb-1">Bullet Tanker Reg Number:</label>
                 <input
                   type="text"
                   required
                   value={bulkForm.tankerNumber}
                   onChange={(e) => setBulkForm({ ...bulkForm, tankerNumber: e.target.value })}
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono font-bold"
+                  className="w-full p-2 bg-slate-50 dark:bg-brand-950 border border-slate-200 dark:border-brand-800 rounded-lg font-mono font-bold text-slate-900 dark:text-slate-100"
                 />
               </div>
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Customs Entry Terminal:</label>
+                <label className="font-bold text-slate-700 dark:text-slate-200 block mb-1">Customs Entry Terminal:</label>
                 <input
                   type="text"
                   required
                   value={bulkForm.customsPoint}
                   onChange={(e) => setBulkForm({ ...bulkForm, customsPoint: e.target.value })}
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"
+                  className="w-full p-2 bg-slate-50 dark:bg-brand-950 border border-slate-200 dark:border-brand-800 rounded-lg text-slate-900 dark:text-slate-100"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Gross Weighbridge Mass (MT):</label>
+                <label className="font-bold text-slate-700 dark:text-slate-200 block mb-1">Gross Weighbridge Mass (MT):</label>
                 <input
                   type="number"
                   step="0.01"
                   required
                   value={bulkForm.grossWeightMt}
                   onChange={(e) => setBulkForm({ ...bulkForm, grossWeightMt: Number(e.target.value) })}
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono"
+                  className="w-full p-2 bg-slate-50 dark:bg-brand-950 border border-slate-200 dark:border-brand-800 rounded-lg font-mono text-slate-900 dark:text-slate-100"
                 />
               </div>
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Tare (Empty Tanker) Mass (MT):</label>
+                <label className="font-bold text-slate-700 dark:text-slate-200 block mb-1">Tare (Empty Tanker) Mass (MT):</label>
                 <input
                   type="number"
                   step="0.01"
                   required
                   value={bulkForm.tareWeightMt}
                   onChange={(e) => setBulkForm({ ...bulkForm, tareWeightMt: Number(e.target.value) })}
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono"
+                  className="w-full p-2 bg-slate-50 dark:bg-brand-950 border border-slate-200 dark:border-brand-800 rounded-lg font-mono text-slate-900 dark:text-slate-100"
                 />
               </div>
             </div>
 
-            <div className="p-3 bg-teal-50 rounded-xl border border-teal-200 flex justify-between items-center font-mono">
-              <span className="font-bold text-teal-900">Computed Net Bulk LPG Decanted:</span>
-              <span className="text-base font-bold text-teal-800">
+            <div className="p-3 bg-brand-50 dark:bg-brand-950 rounded-xl border border-brand-200 dark:border-brand-800 flex justify-between items-center font-mono">
+              <span className="font-bold text-brand-900 dark:text-brand-200">Computed Net Bulk LPG Decanted:</span>
+              <span className="text-base font-bold text-flame-600 dark:text-flame-400">
                 {(bulkForm.grossWeightMt - bulkForm.tareWeightMt).toFixed(3)} MT
               </span>
             </div>
 
-            <div className="flex justify-end space-x-2 pt-2 border-t border-slate-100">
+            <div className="flex justify-end space-x-2 pt-2 border-t border-slate-100 dark:border-brand-800">
               <button
                 type="button"
                 onClick={() => setActiveTab('OVERVIEW')}
-                className="px-4 py-2 text-slate-600 font-semibold"
+                className="px-4 py-2 text-slate-600 dark:text-slate-400 font-semibold"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-navy-800 hover:bg-navy-900 text-white font-bold rounded-xl"
+                className="px-4 py-2 bg-flame-600 hover:bg-flame-500 text-white font-bold rounded-xl shadow-xs"
               >
                 Verify & Commit Decanting Record
               </button>
@@ -332,23 +332,23 @@ export const PlantOperatorPortal: React.FC<PlantOperatorPortalProps> = ({ onDisp
 
       {/* DISPATCH CREATION TAB */}
       {activeTab === 'DISPATCH' && (
-        <div className="bg-white rounded-2xl p-6 shadow-card border border-slate-200 max-w-2xl mx-auto space-y-4">
-          <div className="border-b border-slate-100 pb-3">
-            <h3 className="text-base font-bold text-navy-950">
+        <div className="bg-white dark:bg-brand-900 rounded-2xl p-6 shadow-card border border-slate-200 dark:border-brand-800 max-w-2xl mx-auto space-y-4 transition-colors">
+          <div className="border-b border-slate-100 dark:border-brand-800 pb-3">
+            <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
               Create Outbound Consignment & Gate Pass
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Authorizes transport of filled cylinders to licensed distributor wholesale depots. Generates tamper seal QR code.
             </p>
           </div>
 
           <form onSubmit={handleDispatchSubmit} className="space-y-4 text-xs">
             <div>
-              <label className="font-bold text-slate-700 block mb-1">Receiving Wholesale Distributor:</label>
+              <label className="font-bold text-slate-700 dark:text-slate-200 block mb-1">Receiving Wholesale Distributor:</label>
               <select
                 value={dispatchForm.receiverOrg}
                 onChange={(e) => setDispatchForm({ ...dispatchForm, receiverOrg: e.target.value })}
-                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-medium"
+                className="w-full p-2.5 bg-slate-50 dark:bg-brand-950 border border-slate-200 dark:border-brand-800 rounded-lg font-medium text-slate-900 dark:text-slate-100"
               >
                 <option value="Patan Traders & Energy Suppliers">Patan Traders & Energy Suppliers (Lalitpur)</option>
                 <option value="Janakpur City Gas Depot">Janakpur City Gas Depot (Madhesh)</option>
@@ -358,65 +358,65 @@ export const PlantOperatorPortal: React.FC<PlantOperatorPortalProps> = ({ onDisp
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Delivery Truck Reg Number:</label>
+                <label className="font-bold text-slate-700 dark:text-slate-200 block mb-1">Delivery Truck Reg Number:</label>
                 <input
                   type="text"
                   required
                   value={dispatchForm.vehicleNumber}
                   onChange={(e) => setDispatchForm({ ...dispatchForm, vehicleNumber: e.target.value })}
                   placeholder="E.g. BA 3 KHA 9912"
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono font-bold"
+                  className="w-full p-2 bg-slate-50 dark:bg-brand-950 border border-slate-200 dark:border-brand-800 rounded-lg font-mono font-bold text-slate-900 dark:text-slate-100"
                 />
               </div>
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Carrier Driver Name & Mobile:</label>
+                <label className="font-bold text-slate-700 dark:text-slate-200 block mb-1">Carrier Driver Name & Mobile:</label>
                 <input
                   type="text"
                   required
                   value={dispatchForm.driverName}
                   onChange={(e) => setDispatchForm({ ...dispatchForm, driverName: e.target.value })}
                   placeholder="Driver Full Name"
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"
+                  className="w-full p-2 bg-slate-50 dark:bg-brand-950 border border-slate-200 dark:border-brand-800 rounded-lg text-slate-900 dark:text-slate-100"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Cylinder Quantity (Domestic 14.2kg):</label>
+                <label className="font-bold text-slate-700 dark:text-slate-200 block mb-1">Cylinder Quantity (Domestic 14.2kg):</label>
                 <input
                   type="number"
                   required
                   value={dispatchForm.quantity}
                   onChange={(e) => setDispatchForm({ ...dispatchForm, quantity: Number(e.target.value) })}
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono font-bold"
+                  className="w-full p-2 bg-slate-50 dark:bg-brand-950 border border-slate-200 dark:border-brand-800 rounded-lg font-mono font-bold text-slate-900 dark:text-slate-100"
                 />
               </div>
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Tamper Wire Seal Barcode:</label>
+                <label className="font-bold text-slate-700 dark:text-slate-200 block mb-1">Tamper Wire Seal Barcode:</label>
                 <input
                   type="text"
                   required
                   value={dispatchForm.tamperSeal}
                   onChange={(e) => setDispatchForm({ ...dispatchForm, tamperSeal: e.target.value })}
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono"
+                  className="w-full p-2 bg-slate-50 dark:bg-brand-950 border border-slate-200 dark:border-brand-800 rounded-lg font-mono text-slate-900 dark:text-slate-100"
                 />
               </div>
             </div>
 
-            <div className="flex justify-end space-x-2 pt-2 border-t border-slate-100">
+            <div className="flex justify-end space-x-2 pt-2 border-t border-slate-100 dark:border-brand-800">
               <button
                 type="button"
                 onClick={() => setActiveTab('OVERVIEW')}
-                className="px-4 py-2 text-slate-600 font-semibold"
+                className="px-4 py-2 text-slate-600 dark:text-slate-400 font-semibold"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-xs"
+                className="px-4 py-2 bg-flame-600 hover:bg-flame-500 text-white font-bold rounded-xl shadow-xs"
               >
                 Seal Consignment & Print Gate Pass
               </button>
@@ -427,38 +427,38 @@ export const PlantOperatorPortal: React.FC<PlantOperatorPortalProps> = ({ onDisp
 
       {/* CAROUSEL TELEMETRY TAB */}
       {activeTab === 'CAROUSEL' && (
-        <div className="bg-white rounded-2xl p-6 shadow-card border border-slate-200 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div className="bg-white dark:bg-brand-900 rounded-2xl p-6 shadow-card border border-slate-200 dark:border-brand-800 space-y-4 transition-colors">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-brand-800">
             <div>
-              <h3 className="text-sm font-bold text-navy-950">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
                 Filling Carousel Telemetry & Electronic Tare Check-Weigher
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Siraga 24-head automated electronic carousel with integrated optical leak detector.
               </p>
             </div>
-            <span className="px-2.5 py-1 rounded bg-emerald-100 text-emerald-800 text-xs font-semibold">
+            <span className="px-2.5 py-1 rounded bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 text-xs font-semibold border border-emerald-300 dark:border-emerald-800">
               SCADA Sync Normal
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-              <span className="text-[11px] font-bold text-slate-500 uppercase">Tare Scale Calibration Status</span>
-              <p className="text-sm font-bold text-navy-950">Last Calibrated: 2026-11-09</p>
-              <p className="text-xs text-slate-500">Certified by Nepal Bureau of Standards & Metrology (NS:533).</p>
+            <div className="p-4 bg-slate-50 dark:bg-brand-950 rounded-xl border border-slate-200 dark:border-brand-800 space-y-1">
+              <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">Tare Scale Calibration Status</span>
+              <p className="text-sm font-bold text-slate-900 dark:text-slate-100">Last Calibrated: 2026-11-09</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Certified by Nepal Bureau of Standards & Metrology (NS:533).</p>
             </div>
 
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-              <span className="text-[11px] font-bold text-slate-500 uppercase">Hydraulic Test Surveillance</span>
-              <p className="text-sm font-bold text-navy-950">14 Cylinders Quarantined</p>
-              <p className="text-xs text-slate-500">Cylinders approaching 5-year test expiry isolated for decanting.</p>
+            <div className="p-4 bg-slate-50 dark:bg-brand-950 rounded-xl border border-slate-200 dark:border-brand-800 space-y-1">
+              <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">Hydraulic Test Surveillance</span>
+              <p className="text-sm font-bold text-slate-900 dark:text-slate-100">14 Cylinders Quarantined</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Cylinders approaching 5-year test expiry isolated for decanting.</p>
             </div>
 
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-              <span className="text-[11px] font-bold text-slate-500 uppercase">Daily Filling Throughput</span>
-              <p className="text-sm font-bold text-teal-600">4,280 Cylinders / Shift</p>
-              <p className="text-xs text-slate-500">18.2 seconds average cycle time per head.</p>
+            <div className="p-4 bg-slate-50 dark:bg-brand-950 rounded-xl border border-slate-200 dark:border-brand-800 space-y-1">
+              <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">Daily Filling Throughput</span>
+              <p className="text-sm font-bold text-flame-600 dark:text-flame-400">4,280 Cylinders / Shift</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">18.2 seconds average cycle time per head.</p>
             </div>
           </div>
         </div>
@@ -467,3 +467,4 @@ export const PlantOperatorPortal: React.FC<PlantOperatorPortalProps> = ({ onDisp
     </div>
   );
 };
+export default PlantOperatorPortal;

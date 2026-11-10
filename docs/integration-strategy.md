@@ -53,3 +53,4 @@ For smaller plants lacking continuous SCADA network connectivity:
   1. Delivery dispatch notification sent to authorized distributor upon truck gate departure.
   2. One-Time Passwords (OTP) for authenticated citizen grievance submissions.
   3. Urgent shortage alerts dispatched to NOC Quick Response Team (QRT) field coordinators.
+

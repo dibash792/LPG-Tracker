@@ -61,3 +61,4 @@ The pilot tests the feasibility of digital custody tracking without disrupting a
 - **Distributors**: Smartphone (Android / iOS) with camera for QR/barcode scanning.
 - **Retailers**: Any standard mobile phone running web browser; minimal data usage (< 2 MB / day).
 - **NOC Central Command**: Secure Cloud / Government Data Center (GIDC) running Node.js and PostgreSQL.
+

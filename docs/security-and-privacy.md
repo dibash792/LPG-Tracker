@@ -53,3 +53,4 @@ $$\text{HMAC}_{k}(\text{Seq} \parallel \text{Timestamp} \parallel \text{Actor} \
 | **API4: Unrestricted Resource Consumption** | Request body limits capped at 10MB, express rate-limiting, and indexed database queries. |
 | **API5: Broken Function Level Authorization (BFLA)** | Super Admin endpoints enforce `requireRole(['NOC_SUPER_ADMIN'])` on the server side regardless of UI button states. |
 | **API8: Security Misconfiguration** | Strict CORS whitelisting, generic error messages in production preventing stack trace leakage, secure environment variables. |
+

@@ -16,6 +16,8 @@ import {
   Clock,
   Sparkles
 } from 'lucide-react';
+import { api } from '../../api/client';
+import { OfflineDraftManager } from '../../utils/offlineDraftManager';
 
 export const PublicConsumerPortal: React.FC = () => {
   const { t, formatNumber, language } = useLanguage();
@@ -125,6 +127,20 @@ export const PublicConsumerPortal: React.FC = () => {
       return;
     }
 
+    // Try posting to API, with fallback to offline buffer
+    api.submitComplaint({
+      complainant_name: complaintForm.citizenName,
+      complainant_phone: complaintForm.citizenPhone,
+      retailer_name: complaintForm.retailerName,
+      incident_type: complaintForm.incidentType,
+      description: complaintForm.details
+    }).catch(() => {
+      OfflineDraftManager.saveDraft({
+        type: 'COMPLAINT',
+        payload: complaintForm
+      });
+    });
+
     showToast('Formal consumer complaint logged with NOC Consumer Protection Directorate. Reference # NOC-CIT-2083-99.', 'success');
     setIsComplaintModalOpen(false);
     setComplaintForm({
@@ -141,11 +157,11 @@ export const PublicConsumerPortal: React.FC = () => {
     <div className="space-y-6">
       
       {/* Citizen Welcome & Transparency Banner */}
-      <div className="bg-gradient-to-r from-navy-950 via-navy-900 to-navy-800 text-white rounded-2xl p-6 sm:p-8 shadow-card border border-navy-800">
+      <div className="bg-brand-950 dark:bg-black/60 text-white rounded-2xl p-6 sm:p-8 shadow-card border border-brand-800 transition-colors">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/30 text-xs font-semibold">
-              <ShieldCheck className="w-4 h-4 text-teal-400" />
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-flame-500/20 text-flame-300 border border-flame-500/30 text-xs font-semibold">
+              <ShieldCheck className="w-4 h-4 text-flame-400" />
               <span>NOC Public Transparency Portal • नागरिक सेवा पोर्टल</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
@@ -157,8 +173,8 @@ export const PublicConsumerPortal: React.FC = () => {
           </div>
 
           {/* Official Price Widget */}
-          <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/15 text-center min-w-[220px]">
-            <span className="text-[11px] uppercase font-bold tracking-wider text-teal-300 block">
+          <div className="bg-brand-900/60 dark:bg-brand-900/40 backdrop-blur-md p-4 rounded-xl border border-brand-700/60 text-center min-w-[220px]">
+            <span className="text-[11px] uppercase font-bold tracking-wider text-flame-300 block">
               Official Regulated Price
             </span>
             <div className="text-2xl sm:text-3xl font-bold font-mono text-white mt-1">
@@ -167,15 +183,15 @@ export const PublicConsumerPortal: React.FC = () => {
             <span className="text-[11px] text-slate-300 block mt-0.5">
               per 14.2 kg domestic cylinder
             </span>
-            <div className="mt-2 text-[10px] text-teal-300 font-semibold bg-teal-900/40 py-0.5 px-2 rounded">
+            <div className="mt-2 text-[10px] text-flame-300 font-semibold bg-flame-950/60 border border-flame-900/60 py-0.5 px-2 rounded">
               Gazetted by Nepal Oil Corp
             </div>
           </div>
         </div>
 
         {/* Consumer Privacy Guarantee Note */}
-        <div className="mt-6 pt-4 border-t border-navy-700/80 flex items-start space-x-3 text-xs text-slate-300">
-          <Info className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+        <div className="mt-6 pt-4 border-t border-brand-850 flex items-start space-x-3 text-xs text-slate-300">
+          <Info className="w-4 h-4 text-flame-400 shrink-0 mt-0.5" />
           <p className="leading-relaxed">
             <strong>Civil Privacy Guarantee:</strong> Under Government of Nepal distribution guidelines, household-level cylinder purchases and identity records are strictly private and unmonitored. This platform only tracks supply availability between licensed industrial companies.
           </p>
@@ -183,7 +199,7 @@ export const PublicConsumerPortal: React.FC = () => {
       </div>
 
       {/* Search and Filters */}
-      <div className="bg-white rounded-2xl p-4 shadow-card border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-3">
+      <div className="bg-white dark:bg-brand-900 rounded-2xl p-4 shadow-card border border-slate-200 dark:border-brand-800 flex flex-col md:flex-row items-center justify-between gap-3 transition-colors">
         
         <div className="relative w-full md:w-80">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -192,20 +208,20 @@ export const PublicConsumerPortal: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search neighborhood, ward, retailer name..."
-            className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-teal-500/20"
+            className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 dark:bg-brand-950 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-brand-800 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-flame-500/20 focus:border-flame-500"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-2 w-full md:w-auto text-xs">
-          <div className="flex items-center space-x-1.5 text-slate-500 font-semibold">
-            <MapPin className="w-3.5 h-3.5 text-teal-600" />
+          <div className="flex items-center space-x-1.5 text-slate-500 dark:text-slate-400 font-semibold">
+            <MapPin className="w-3.5 h-3.5 text-flame-500" />
             <span>District:</span>
           </div>
 
           <select
             value={selectedDistrict}
             onChange={(e) => setSelectedDistrict(e.target.value)}
-            className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium text-slate-700 focus:outline-hidden"
+            className="bg-slate-50 dark:bg-brand-950 border border-slate-200 dark:border-brand-800 rounded-lg px-2.5 py-1.5 font-medium text-slate-700 dark:text-slate-200 focus:outline-hidden"
           >
             <option value="ALL">All Districts</option>
             <option value="Kathmandu">Kathmandu (काठमाडौँ)</option>
@@ -217,7 +233,7 @@ export const PublicConsumerPortal: React.FC = () => {
           <select
             value={selectedBrand}
             onChange={(e) => setSelectedBrand(e.target.value)}
-            className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium text-slate-700 focus:outline-hidden"
+            className="bg-slate-50 dark:bg-brand-950 border border-slate-200 dark:border-brand-800 rounded-lg px-2.5 py-1.5 font-medium text-slate-700 dark:text-slate-200 focus:outline-hidden"
           >
             <option value="ALL">All Licensed Brands</option>
             <option value="Nepal Gas">Nepal Gas</option>
@@ -228,7 +244,7 @@ export const PublicConsumerPortal: React.FC = () => {
 
           <button
             onClick={() => setIsComplaintModalOpen(true)}
-            className="ml-auto px-3.5 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold rounded-xl text-xs transition-colors flex items-center space-x-1.5 shadow-2xs"
+            className="ml-auto px-3.5 py-1.5 bg-flame-600 hover:bg-flame-500 text-white font-bold rounded-xl text-xs transition-colors flex items-center space-x-1.5 shadow-2xs"
           >
             <AlertCircle className="w-3.5 h-3.5" />
             <span>Report Shortage or Overpricing</span>
@@ -239,16 +255,16 @@ export const PublicConsumerPortal: React.FC = () => {
       {/* Retailers List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredRetailers.map((r) => (
-          <div key={r.id} className="bg-white rounded-2xl p-5 shadow-card border border-slate-200 hover:border-slate-300 transition-all space-y-3">
+          <div key={r.id} className="bg-white dark:bg-brand-900 rounded-2xl p-5 shadow-card border border-slate-200 dark:border-brand-800 hover:border-slate-300 dark:hover:border-brand-700 transition-all space-y-3">
             <div className="flex items-start justify-between">
               <div>
-                <span className="text-[10px] font-semibold text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-200 inline-block mb-1">
+                <span className="text-[10px] font-semibold text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-800/60 px-2 py-0.5 rounded border border-brand-200 dark:border-brand-700 inline-block mb-1">
                   Brand: {r.brand}
                 </span>
-                <h3 className="text-sm font-bold text-navy-950">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
                   {r.name}
                 </h3>
-                <p className="text-xs text-slate-500 flex items-center space-x-1 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center space-x-1 mt-0.5">
                   <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                   <span>{r.address} ({r.district})</span>
                 </p>
@@ -256,27 +272,27 @@ export const PublicConsumerPortal: React.FC = () => {
 
               <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                 r.status === 'AVAILABLE'
-                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800'
                   : r.status === 'LOW_STOCK'
-                    ? 'bg-amber-50 text-amber-800 border border-amber-200'
-                    : 'bg-slate-100 text-slate-700 border border-slate-200'
+                    ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-400 border border-amber-200 dark:border-amber-800'
+                    : 'bg-slate-100 dark:bg-brand-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-brand-700'
               }`}>
                 {r.status}
               </span>
             </div>
 
-            <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs flex items-center justify-between">
+            <div className="p-3 bg-slate-50 dark:bg-brand-950 rounded-xl border border-slate-100 dark:border-brand-800 text-xs flex items-center justify-between">
               <div>
-                <span className="text-[10px] text-slate-400 block uppercase font-bold">Public Stock Status</span>
-                <span className="font-semibold text-slate-800">{r.stockStatus}</span>
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 block uppercase font-bold">Public Stock Status</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-200">{r.stockStatus}</span>
               </div>
               <div className="text-right">
-                <span className="text-[10px] text-slate-400 block uppercase font-bold">Regulated Price</span>
-                <span className="font-bold font-mono text-teal-700">NPR {r.priceNpr}</span>
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 block uppercase font-bold">Regulated Price</span>
+                <span className="font-bold font-mono text-flame-600 dark:text-flame-400">NPR {r.priceNpr}</span>
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-100">
+            <div className="flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500 pt-2 border-t border-slate-100 dark:border-brand-800">
               <span className="flex items-center space-x-1">
                 <Phone className="w-3 h-3 text-slate-400" />
                 <span>{r.contactPhone}</span>
@@ -289,16 +305,16 @@ export const PublicConsumerPortal: React.FC = () => {
 
       {/* Citizen Complaint Modal (requires verified citizen contact as per prompt rule) */}
       {isComplaintModalOpen && (
-        <div className="fixed inset-0 z-60 bg-navy-950/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 animate-in zoom-in-95 duration-150 space-y-4">
-            <div className="flex items-start justify-between border-b border-slate-100 pb-3">
+        <div className="fixed inset-0 z-60 bg-brand-950/75 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-brand-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-brand-800 animate-in zoom-in-95 duration-150 space-y-4">
+            <div className="flex items-start justify-between border-b border-slate-100 dark:border-brand-800 pb-3">
               <div className="flex items-center space-x-2">
-                <AlertCircle className="w-5 h-5 text-amber-600" />
+                <AlertCircle className="w-5 h-5 text-amber-500" />
                 <div>
-                  <h3 className="text-base font-bold text-navy-950">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
                     NOC Civil Protection Complaint Desk
                   </h3>
-                  <span className="text-[11px] text-slate-500">
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400">
                     Mandatory Phone / Account Authentication
                   </span>
                 </div>
@@ -306,47 +322,47 @@ export const PublicConsumerPortal: React.FC = () => {
 
               <button
                 onClick={() => setIsComplaintModalOpen(false)}
-                className="text-xs text-slate-400 hover:text-slate-600"
+                className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
               >
                 Close
               </button>
             </div>
 
-            <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 leading-relaxed">
+            <div className="p-3 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-200 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200 leading-relaxed">
               <strong>Account Authentication Rule:</strong> To prevent false reporting or malicious commercial defamation, reports require a verified phone contact under Nepal Oil Corporation Consumer Regulations.
             </div>
 
             <form onSubmit={handleSubmitComplaint} className="space-y-3 text-xs">
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Your Full Name:</label>
+                <label className="font-bold text-slate-700 dark:text-slate-200 block mb-1">Your Full Name:</label>
                 <input
                   type="text"
                   required
                   value={complaintForm.citizenName}
                   onChange={(e) => setComplaintForm({ ...complaintForm, citizenName: e.target.value })}
                   placeholder="E.g. Bikash Thapa"
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"
+                  className="w-full p-2 bg-slate-50 dark:bg-brand-950 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-brand-800 rounded-lg"
                 />
               </div>
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Verified Mobile (SMS OTP Verified):</label>
+                <label className="font-bold text-slate-700 dark:text-slate-200 block mb-1">Verified Mobile (SMS OTP Verified):</label>
                 <input
                   type="tel"
                   required
                   value={complaintForm.citizenPhone}
                   onChange={(e) => setComplaintForm({ ...complaintForm, citizenPhone: e.target.value })}
                   placeholder="98XXXXXXXX"
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono"
+                  className="w-full p-2 bg-slate-50 dark:bg-brand-950 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-brand-800 rounded-lg font-mono"
                 />
               </div>
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Violation Category:</label>
+                <label className="font-bold text-slate-700 dark:text-slate-200 block mb-1">Violation Category:</label>
                 <select
                   value={complaintForm.incidentType}
                   onChange={(e) => setComplaintForm({ ...complaintForm, incidentType: e.target.value })}
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"
+                  className="w-full p-2 bg-slate-50 dark:bg-brand-950 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-brand-800 rounded-lg"
                 >
                   <option value="OVERPRICING">Selling Above Regulated NPR 1,895 Rate</option>
                   <option value="ARTIFICIAL_HOARDING">Artificial Shortage / Refusal to Distribute</option>
@@ -355,40 +371,40 @@ export const PublicConsumerPortal: React.FC = () => {
               </div>
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Retail Store Name & Ward:</label>
+                <label className="font-bold text-slate-700 dark:text-slate-200 block mb-1">Retail Store Name & Ward:</label>
                 <input
                   type="text"
                   required
                   value={complaintForm.retailerName}
                   onChange={(e) => setComplaintForm({ ...complaintForm, retailerName: e.target.value })}
                   placeholder="E.g. Koteshwor Gas Center, Ward 32"
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"
+                  className="w-full p-2 bg-slate-50 dark:bg-brand-950 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-brand-800 rounded-lg"
                 />
               </div>
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Incident Explanation:</label>
+                <label className="font-bold text-slate-700 dark:text-slate-200 block mb-1">Incident Explanation:</label>
                 <textarea
                   rows={3}
                   required
                   value={complaintForm.details}
                   onChange={(e) => setComplaintForm({ ...complaintForm, details: e.target.value })}
                   placeholder="Details of transaction, charged amount or refusal..."
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"
+                  className="w-full p-2 bg-slate-50 dark:bg-brand-950 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-brand-800 rounded-lg"
                 />
               </div>
 
-              <div className="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
+              <div className="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100 dark:border-brand-800">
                 <button
                   type="button"
                   onClick={() => setIsComplaintModalOpen(false)}
-                  className="px-4 py-2 text-slate-600 font-semibold"
+                  className="px-4 py-2 text-slate-600 dark:text-slate-400 font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-navy-800 hover:bg-navy-900 text-white font-bold rounded-xl shadow-xs"
+                  className="px-4 py-2 bg-flame-600 hover:bg-flame-500 text-white font-bold rounded-xl shadow-xs"
                 >
                   Authenticate & Submit Report
                 </button>
@@ -401,3 +417,4 @@ export const PublicConsumerPortal: React.FC = () => {
     </div>
   );
 };
+export default PublicConsumerPortal;

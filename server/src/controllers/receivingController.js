@@ -125,3 +125,4 @@ export const confirmReceiving = (req, res) => {
     discrepancyCase: discrepancyTicket
   });
 };
+

@@ -120,3 +120,4 @@ export const getDispatchByCodeOrQR = (req, res) => {
 
   return res.json({ success: true, dispatch });
 };
+

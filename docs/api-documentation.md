@@ -179,3 +179,4 @@ Recalculates SHA-256 HMAC cryptographic chain and reports tampering validation s
 
 ### `GET /reports/overview`
 Returns 6 core national executive metrics.
+

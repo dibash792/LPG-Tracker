@@ -19,9 +19,6 @@ import {
   X, 
   Send, 
   Clock, 
-  Calendar,
-  Truck,
-  ArrowRight,
   HelpCircle,
   Hash,
   User,
@@ -121,35 +118,35 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
     <div className="space-y-6">
       
       {/* Title & Important Legal / Accountability Disclaimer */}
-      <div className="bg-white rounded-2xl p-6 shadow-card border border-slate-200/80">
+      <div className="bg-white dark:bg-brand-900/70 rounded-2xl p-6 shadow-card border border-slate-200/90 dark:border-brand-800/80 transition-colors">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center space-x-2">
-              <span className="p-1.5 rounded-lg bg-amber-50 text-amber-700 border border-amber-200">
+              <span className="p-1.5 rounded-lg bg-flame-100 dark:bg-flame-950/60 text-flame-700 dark:text-flame-300 border border-flame-200 dark:border-flame-800">
                 <AlertTriangle className="w-4 h-4" />
               </span>
-              <h2 className="text-lg font-bold text-navy-950">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                 {language === 'ne' ? 'सिलिन्डर असामञ्जस्य तथा अनुसन्धान व्यवस्थापन' : 'Discrepancy & Custody Variance Management'}
               </h2>
             </div>
-            <p className="text-xs text-slate-500 mt-1 max-w-3xl">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-3xl">
               NOC reconciliation ledger tracking quantity mismatches and unverified cylinder serials across custody transitions.
             </p>
           </div>
 
           <div className="flex items-center space-x-2">
-            <span className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-navy-50 text-navy-800 border border-navy-200">
+            <span className="text-xs font-bold px-3 py-1.5 rounded-xl bg-brand-50 dark:bg-brand-950 text-brand-900 dark:text-brand-200 border border-brand-200 dark:border-brand-800">
               Active Flags: {discrepancies.filter(d => d.status !== 'RESOLVED').length} Cases
             </span>
           </div>
         </div>
 
         {/* Accountability Rule Banner */}
-        <div className="mt-4 p-3.5 bg-amber-50/60 rounded-xl border border-amber-200/80 flex items-start space-x-3 text-xs text-amber-900">
-          <HelpCircle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+        <div className="mt-4 p-3.5 bg-amber-50/70 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800/60 flex items-start space-x-3 text-xs text-amber-900 dark:text-amber-200">
+          <HelpCircle className="w-4 h-4 text-amber-700 dark:text-amber-400 shrink-0 mt-0.5" />
           <div className="space-y-0.5">
             <span className="font-bold">National Accountability Policy Rule:</span>
-            <p className="text-amber-800 leading-relaxed">
+            <p className="text-amber-800 dark:text-amber-300 leading-relaxed">
               Under NOC Guidelines 2081, physical discrepancies or unmatched serial tags represent custody audit variances and must not automatically be branded as fraud without formal inquiry, tare weight recalibration, or transit inspection findings.
             </p>
           </div>
@@ -157,7 +154,7 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white rounded-xl p-4 shadow-card border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-3">
+      <div className="bg-white dark:bg-brand-900/70 rounded-xl p-4 shadow-card border border-slate-200/90 dark:border-brand-800/80 flex flex-col md:flex-row items-center justify-between gap-3">
         
         {/* Search */}
         <div className="relative w-full md:w-80">
@@ -167,20 +164,20 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search Case ID, Truck, Plant..."
-            className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-teal-500/20"
+            className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-brand-950 border border-slate-200 dark:border-brand-800 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-flame-500/20 dark:text-slate-100"
           />
         </div>
 
         {/* Filter Pills */}
         <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-          <div className="flex items-center space-x-1.5 text-xs text-slate-500">
+          <div className="flex items-center space-x-1.5 text-xs text-slate-500 dark:text-slate-400 font-semibold">
             <Filter className="w-3.5 h-3.5" />
             <span>Status:</span>
           </div>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium text-slate-700 focus:outline-hidden"
+            className="text-xs bg-slate-50 dark:bg-brand-950 border border-slate-200 dark:border-brand-800 rounded-lg px-2.5 py-1.5 font-medium text-slate-700 dark:text-slate-200 focus:outline-hidden"
           >
             <option value="ALL">All Statuses ({discrepancies.length})</option>
             <option value="PENDING_REVIEW">Pending Review</option>
@@ -193,7 +190,7 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
           <select
             value={severityFilter}
             onChange={(e) => setSeverityFilter(e.target.value)}
-            className="text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium text-slate-700 focus:outline-hidden"
+            className="text-xs bg-slate-50 dark:bg-brand-950 border border-slate-200 dark:border-brand-800 rounded-lg px-2.5 py-1.5 font-medium text-slate-700 dark:text-slate-200 focus:outline-hidden"
           >
             <option value="ALL">All Severities</option>
             <option value="CRITICAL">Critical</option>
@@ -205,11 +202,11 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
       </div>
 
       {/* Discrepancy Table */}
-      <div className="bg-white rounded-2xl shadow-card border border-slate-200 overflow-hidden">
+      <div className="bg-white dark:bg-brand-900/70 rounded-2xl shadow-card border border-slate-200/90 dark:border-brand-800/80 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+              <tr className="bg-slate-50/80 dark:bg-brand-950/80 border-b border-slate-200 dark:border-brand-800 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 <th className="py-3.5 px-4">Case / Consignment</th>
                 <th className="py-3.5 px-4">Custody Route</th>
                 <th className="py-3.5 px-4 text-center">Dispatched</th>
@@ -220,7 +217,7 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
                 <th className="py-3.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-xs">
+            <tbody className="divide-y divide-slate-100 dark:divide-brand-800/60 text-xs">
               {filteredCases.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="py-12 text-center text-slate-400">
@@ -231,16 +228,16 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
                 filteredCases.map((c) => (
                   <tr 
                     key={c.id} 
-                    className="hover:bg-slate-50/70 transition-colors cursor-pointer"
+                    className="hover:bg-slate-50/70 dark:hover:bg-brand-850/60 transition-colors cursor-pointer"
                     onClick={() => setSelectedCase(c)}
                   >
                     <td className="py-3.5 px-4">
-                      <div className="font-mono font-bold text-navy-950">{c.id}</div>
+                      <div className="font-mono font-bold text-slate-900 dark:text-white">{c.id}</div>
                       <div className="text-[11px] text-slate-400 font-mono">{c.consignmentId}</div>
                     </td>
 
                     <td className="py-3.5 px-4 max-w-xs">
-                      <div className="font-medium text-slate-900 truncate">
+                      <div className="font-semibold text-slate-900 dark:text-slate-100 truncate">
                         {c.sourceEntity.name}
                       </div>
                       <div className="flex items-center space-x-1 text-[11px] text-slate-400 truncate">
@@ -248,21 +245,21 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
                       </div>
                     </td>
 
-                    <td className="py-3.5 px-4 text-center font-mono font-semibold text-slate-700">
+                    <td className="py-3.5 px-4 text-center font-mono font-semibold text-slate-700 dark:text-slate-300">
                       {formatNumber(c.dispatchedQty)}
                     </td>
 
-                    <td className="py-3.5 px-4 text-center font-mono font-semibold text-slate-700">
+                    <td className="py-3.5 px-4 text-center font-mono font-semibold text-slate-700 dark:text-slate-300">
                       {formatNumber(c.receivedQty)}
                     </td>
 
                     <td className="py-3.5 px-4 text-center">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full font-mono font-bold text-xs ${
                         c.varianceQty === 0 
-                          ? 'bg-slate-100 text-slate-600'
+                          ? 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
                           : c.varianceQty < 0 
-                            ? 'bg-red-50 text-red-700 border border-red-200' 
-                            : 'bg-teal-50 text-teal-700 border border-teal-200'
+                            ? 'bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/60 dark:text-red-300 dark:border-red-800' 
+                            : 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300'
                       }`}>
                         {c.varianceQty > 0 ? `+${c.varianceQty}` : c.varianceQty}
                       </span>
@@ -270,7 +267,7 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
 
                     <td className="py-3.5 px-4">
                       <div className="flex items-center space-x-1">
-                        <span className="font-mono text-xs font-semibold text-slate-700">
+                        <span className="font-mono text-xs font-semibold text-slate-700 dark:text-slate-300">
                           {c.unmatchedSerials.length}
                         </span>
                         <span className="text-[11px] text-slate-400">units tagged</span>
@@ -287,7 +284,7 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
                           e.stopPropagation();
                           setSelectedCase(c);
                         }}
-                        className="px-3 py-1.5 text-xs font-semibold text-navy-800 bg-slate-100 hover:bg-navy-800 hover:text-white rounded-lg transition-colors inline-flex items-center space-x-1"
+                        className="px-3 py-1.5 text-xs font-semibold text-brand-800 dark:text-brand-300 bg-slate-100 dark:bg-brand-850 hover:bg-brand-800 hover:text-white rounded-lg transition-colors inline-flex items-center space-x-1"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         <span>Inspect</span>
@@ -301,16 +298,16 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
         </div>
       </div>
 
-      {/* Case Investigation Drawer / Detail Modal */}
+      {/* Case Investigation Drawer */}
       {selectedCase && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-navy-950/60 backdrop-blur-xs flex justify-end">
-          <div className="w-full max-w-2xl bg-white h-full min-h-screen shadow-2xl flex flex-col animate-in slide-in-from-right duration-200">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-brand-950/70 backdrop-blur-xs flex justify-end">
+          <div className="w-full max-w-2xl bg-white dark:bg-brand-900 h-full min-h-screen shadow-2xl flex flex-col animate-in slide-in-from-right duration-150">
             
             {/* Drawer Header */}
-            <div className="p-6 bg-navy-900 text-white flex items-center justify-between">
+            <div className="p-6 bg-brand-950 text-white flex items-center justify-between border-b border-brand-850">
               <div>
                 <div className="flex items-center space-x-2">
-                  <span className="font-mono text-base font-bold text-teal-400">
+                  <span className="font-mono text-base font-bold text-flame-400">
                     {selectedCase.id}
                   </span>
                   <StatusBadge status={selectedCase.status} size="sm" />
@@ -322,7 +319,7 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
 
               <button
                 onClick={() => setSelectedCase(null)}
-                className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-navy-800"
+                className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-brand-850"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -332,20 +329,20 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
               
               {/* Custody Transfer Cards */}
-              <div className="grid grid-cols-2 gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <div className="grid grid-cols-2 gap-3 p-4 bg-slate-50 dark:bg-brand-950 rounded-xl border border-slate-200 dark:border-brand-800">
                 <div>
-                  <span className="text-[10px] font-semibold text-slate-400 uppercase">Dispatch Origin</span>
-                  <p className="text-xs font-bold text-navy-950 mt-0.5">{selectedCase.sourceEntity.name}</p>
-                  <p className="text-[11px] text-slate-500">{selectedCase.sourceEntity.location}</p>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase">Dispatch Origin</span>
+                  <p className="text-xs font-bold text-slate-900 dark:text-white mt-0.5">{selectedCase.sourceEntity.name}</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">{selectedCase.sourceEntity.location}</p>
                   <span className="text-[10px] text-slate-400 block mt-1 font-mono">
                     Qty: {formatNumber(selectedCase.dispatchedQty)} Cylinders
                   </span>
                 </div>
 
                 <div>
-                  <span className="text-[10px] font-semibold text-slate-400 uppercase">Receiving Destination</span>
-                  <p className="text-xs font-bold text-navy-950 mt-0.5">{selectedCase.destinationEntity.name}</p>
-                  <p className="text-[11px] text-slate-500">{selectedCase.destinationEntity.location}</p>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase">Receiving Destination</span>
+                  <p className="text-xs font-bold text-slate-900 dark:text-white mt-0.5">{selectedCase.destinationEntity.name}</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">{selectedCase.destinationEntity.location}</p>
                   <span className="text-[10px] text-slate-400 block mt-1 font-mono">
                     Qty: {formatNumber(selectedCase.receivedQty)} Cylinders
                   </span>
@@ -353,42 +350,42 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
               </div>
 
               {/* Numerical Variance Breakdown */}
-              <div className="p-4 bg-white rounded-xl border border-slate-200 space-y-2">
-                <h4 className="text-xs font-bold uppercase text-slate-500 tracking-wider">
+              <div className="p-4 bg-white dark:bg-brand-900 rounded-xl border border-slate-200 dark:border-brand-800 space-y-2">
+                <h4 className="text-xs font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">
                   Reconciliation Quantities
                 </h4>
                 <div className="grid grid-cols-4 gap-2 text-center pt-2">
-                  <div className="p-2 bg-slate-50 rounded-lg">
-                    <span className="text-[10px] text-slate-500 block">Expected</span>
-                    <span className="text-sm font-bold font-mono text-slate-800">
+                  <div className="p-2 bg-slate-50 dark:bg-brand-950 rounded-lg">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Expected</span>
+                    <span className="text-sm font-bold font-mono text-slate-800 dark:text-slate-200">
                       {selectedCase.expectedQty}
                     </span>
                   </div>
-                  <div className="p-2 bg-slate-50 rounded-lg">
-                    <span className="text-[10px] text-slate-500 block">Dispatched</span>
-                    <span className="text-sm font-bold font-mono text-slate-800">
+                  <div className="p-2 bg-slate-50 dark:bg-brand-950 rounded-lg">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Dispatched</span>
+                    <span className="text-sm font-bold font-mono text-slate-800 dark:text-slate-200">
                       {selectedCase.dispatchedQty}
                     </span>
                   </div>
-                  <div className="p-2 bg-slate-50 rounded-lg">
-                    <span className="text-[10px] text-slate-500 block">Received</span>
-                    <span className="text-sm font-bold font-mono text-slate-800">
+                  <div className="p-2 bg-slate-50 dark:bg-brand-950 rounded-lg">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Received</span>
+                    <span className="text-sm font-bold font-mono text-slate-800 dark:text-slate-200">
                       {selectedCase.receivedQty}
                     </span>
                   </div>
-                  <div className="p-2 bg-red-50 rounded-lg border border-red-100">
-                    <span className="text-[10px] text-red-600 font-medium block">Net Variance</span>
-                    <span className="text-sm font-bold font-mono text-red-700">
+                  <div className="p-2 bg-red-50 dark:bg-red-950/60 rounded-lg border border-red-100 dark:border-red-900">
+                    <span className="text-[10px] text-red-600 dark:text-red-400 font-bold block">Net Variance</span>
+                    <span className="text-sm font-bold font-mono text-red-700 dark:text-red-300">
                       {selectedCase.varianceQty} Units
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Unmatched Serial Numbers / RFID Tag List */}
+              {/* Unmatched Serial Numbers */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold uppercase text-slate-500 tracking-wider">
+                  <h4 className="text-xs font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">
                     Unmatched / Missing Cylinder Serial Barcodes ({selectedCase.unmatchedSerials.length})
                   </h4>
                   <span className="text-[11px] text-slate-400">
@@ -396,14 +393,14 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
                   </span>
                 </div>
 
-                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex flex-wrap gap-2 max-h-36 overflow-y-auto">
+                <div className="p-3 bg-slate-50 dark:bg-brand-950 rounded-xl border border-slate-200 dark:border-brand-800 flex flex-wrap gap-2 max-h-36 overflow-y-auto">
                   {selectedCase.unmatchedSerials.length === 0 ? (
                     <span className="text-xs text-slate-400">All serial tags matched successfully.</span>
                   ) : (
                     selectedCase.unmatchedSerials.map((serial) => (
                       <span 
                         key={serial} 
-                        className="px-2.5 py-1 rounded bg-white border border-slate-200 font-mono text-xs text-slate-800 flex items-center space-x-1 shadow-2xs"
+                        className="px-2.5 py-1 rounded bg-white dark:bg-brand-900 border border-slate-200 dark:border-brand-800 font-mono text-xs text-slate-800 dark:text-slate-200 flex items-center space-x-1 shadow-2xs"
                       >
                         <Hash className="w-3 h-3 text-slate-400" />
                         <span>{serial}</span>
@@ -414,20 +411,20 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
               </div>
 
               {/* Initial Remarks */}
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-700">
-                <span className="font-bold block text-slate-900 mb-1">Gate Pass & Receiving Bay Remarks:</span>
+              <div className="p-3 bg-slate-50 dark:bg-brand-950 rounded-xl border border-slate-200 dark:border-brand-800 text-xs text-slate-700 dark:text-slate-300">
+                <span className="font-bold block text-slate-900 dark:text-white mb-1">Gate Pass & Receiving Bay Remarks:</span>
                 <p>{selectedCase.initialRemarks}</p>
               </div>
 
               {/* Super Admin Action Controls */}
-              <div className="p-4 bg-navy-50 rounded-xl border border-navy-200 space-y-3">
+              <div className="p-4 bg-brand-50 dark:bg-brand-950 rounded-xl border border-brand-200 dark:border-brand-800 space-y-3">
                 <div className="flex items-center space-x-2">
-                  <ShieldCheck className="w-4 h-4 text-teal-600" />
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-navy-950">
+                  <ShieldCheck className="w-4 h-4 text-flame-600 dark:text-flame-400" />
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-brand-950 dark:text-white">
                     NOC Super Admin Decisions
                   </h4>
                 </div>
-                <p className="text-[11px] text-slate-600">
+                <p className="text-[11px] text-slate-600 dark:text-slate-400">
                   Select official regulatory ruling. Every transition is cryptographically written to the permanent audit ledger.
                 </p>
 
@@ -437,9 +434,9 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
                       setPendingStatusChange('TECHNICAL_VARIANCE');
                       setIsActionModalOpen(true);
                     }}
-                    className="p-2 text-xs font-semibold rounded-lg bg-white border border-slate-300 hover:border-slate-400 text-slate-800 text-left flex items-center space-x-2"
+                    className="p-2 text-xs font-semibold rounded-lg bg-white dark:bg-brand-900 border border-slate-300 dark:border-brand-700 hover:border-slate-400 text-slate-800 dark:text-slate-200 text-left flex items-center space-x-2"
                   >
-                    <Scale className="w-3.5 h-3.5 text-slate-600" />
+                    <Scale className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
                     <span>Record Technical Variance</span>
                   </button>
 
@@ -448,9 +445,9 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
                       setPendingStatusChange('UNDER_INVESTIGATION');
                       setIsActionModalOpen(true);
                     }}
-                    className="p-2 text-xs font-semibold rounded-lg bg-white border border-sky-300 hover:border-sky-400 text-sky-900 text-left flex items-center space-x-2"
+                    className="p-2 text-xs font-semibold rounded-lg bg-white dark:bg-brand-900 border border-blue-300 dark:border-blue-700 hover:border-blue-400 text-blue-900 dark:text-blue-200 text-left flex items-center space-x-2"
                   >
-                    <HelpCircle className="w-3.5 h-3.5 text-sky-600" />
+                    <HelpCircle className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                     <span>Assign Field Inspection</span>
                   </button>
 
@@ -459,9 +456,9 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
                       setPendingStatusChange('SUSPECTED_DIVERSION');
                       setIsActionModalOpen(true);
                     }}
-                    className="p-2 text-xs font-semibold rounded-lg bg-orange-50 border border-orange-300 hover:border-orange-400 text-orange-900 text-left flex items-center space-x-2"
+                    className="p-2 text-xs font-semibold rounded-lg bg-flame-50 dark:bg-flame-950/60 border border-flame-300 dark:border-flame-800 text-flame-900 dark:text-flame-200 text-left flex items-center space-x-2"
                   >
-                    <ShieldAlert className="w-3.5 h-3.5 text-orange-600" />
+                    <ShieldAlert className="w-3.5 h-3.5 text-flame-600 dark:text-flame-400" />
                     <span>Flag Suspected Diversion</span>
                   </button>
 
@@ -470,9 +467,9 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
                       setPendingStatusChange('RESOLVED');
                       setIsActionModalOpen(true);
                     }}
-                    className="p-2 text-xs font-semibold rounded-lg bg-emerald-50 border border-emerald-300 hover:border-emerald-400 text-emerald-900 text-left flex items-center space-x-2"
+                    className="p-2 text-xs font-semibold rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200 text-left flex items-center space-x-2"
                   >
-                    <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                    <CheckCircle className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                     <span>Reconcile & Close Case</span>
                   </button>
                 </div>
@@ -480,15 +477,15 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
 
               {/* Investigation History Timeline */}
               <div className="space-y-3 pt-2">
-                <h4 className="text-xs font-bold uppercase text-slate-500 tracking-wider">
+                <h4 className="text-xs font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">
                   Investigation & Audit History ({selectedCase.investigationNotes.length})
                 </h4>
 
                 <div className="space-y-3">
                   {selectedCase.investigationNotes.map((note) => (
-                    <div key={note.id} className="p-3 bg-white rounded-xl border border-slate-200 text-xs space-y-1 shadow-2xs">
+                    <div key={note.id} className="p-3 bg-white dark:bg-brand-950 rounded-xl border border-slate-200 dark:border-brand-800 text-xs space-y-1 shadow-2xs">
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-navy-950 flex items-center space-x-1">
+                        <span className="font-bold text-slate-900 dark:text-white flex items-center space-x-1">
                           <User className="w-3 h-3 text-slate-400" />
                           <span>{note.author}</span>
                           <span className="text-[10px] text-slate-400 font-normal">({note.role})</span>
@@ -497,7 +494,7 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
                           {new Date(note.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
-                      <p className="text-slate-600 leading-relaxed pt-1">{note.note}</p>
+                      <p className="text-slate-600 dark:text-slate-300 leading-relaxed pt-1">{note.note}</p>
                     </div>
                   ))}
                 </div>
@@ -509,12 +506,12 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
                     value={newNoteText}
                     onChange={(e) => setNewNoteText(e.target.value)}
                     placeholder="Append official investigation note..."
-                    className="flex-1 px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-teal-500/20"
+                    className="flex-1 px-3 py-2 text-xs bg-slate-50 dark:bg-brand-950 border border-slate-200 dark:border-brand-800 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-flame-500/20 dark:text-slate-100"
                   />
                   <button
                     type="submit"
                     disabled={!newNoteText.trim()}
-                    className="p-2 bg-navy-800 text-white rounded-lg hover:bg-navy-900 disabled:opacity-50 transition-colors"
+                    className="p-2 bg-brand-800 hover:bg-brand-900 text-white rounded-lg disabled:opacity-50 transition-colors"
                   >
                     <Send className="w-3.5 h-3.5" />
                   </button>
@@ -526,27 +523,27 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
         </div>
       )}
 
-      {/* Confirmation Modal for Super Admin Decisions */}
+      {/* Confirmation Modal */}
       {isActionModalOpen && (
-        <div className="fixed inset-0 z-60 bg-navy-950/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 animate-in zoom-in-95 duration-150 space-y-4">
+        <div className="fixed inset-0 z-60 bg-brand-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-brand-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-brand-800 space-y-4">
             <div className="flex items-center space-x-2.5">
-              <ShieldAlert className="w-5 h-5 text-amber-600" />
-              <h3 className="text-base font-bold text-navy-950">
+              <ShieldAlert className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">
                 Confirm Regulatory Ruling
               </h3>
             </div>
 
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               You are modifying the official status of Case <strong>{selectedCase?.id}</strong> to:
             </p>
 
-            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 font-mono text-xs font-bold text-navy-900">
+            <div className="p-3 bg-slate-50 dark:bg-brand-950 rounded-xl border border-slate-200 dark:border-brand-800 font-mono text-xs font-bold text-slate-900 dark:text-white">
               {pendingStatusChange}
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                 Administrative Justification (Mandatory for Audit Trail):
               </label>
               <textarea
@@ -554,7 +551,7 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
                 value={adminActionReason}
                 onChange={(e) => setAdminActionReason(e.target.value)}
                 placeholder="E.g., Approved tare scale recalibration report or dispatched field vigilance unit to inspect vehicle BA 2 KHA 7104..."
-                className="w-full p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-teal-500/20"
+                className="w-full p-2.5 text-xs bg-slate-50 dark:bg-brand-950 border border-slate-200 dark:border-brand-800 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-flame-500/20 dark:text-slate-100"
               />
             </div>
 
@@ -565,14 +562,14 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
                   setPendingStatusChange(null);
                   setAdminActionReason('');
                 }}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800"
+                className="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
               >
                 Cancel
               </button>
               <button
                 onClick={handleExecuteStatusChange}
                 disabled={!adminActionReason.trim()}
-                className="px-4 py-2 text-xs font-bold text-white bg-navy-800 hover:bg-navy-900 rounded-xl shadow-xs disabled:opacity-50"
+                className="px-4 py-2 text-xs font-bold text-white bg-flame-600 hover:bg-flame-700 rounded-xl shadow-xs disabled:opacity-50"
               >
                 Sign & Record Decision
               </button>
@@ -584,4 +581,3 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
     </div>
   );
 };
-

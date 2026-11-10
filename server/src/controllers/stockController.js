@@ -63,3 +63,4 @@ export const recordStockAdjustment = (req, res) => {
     stock
   });
 };
+

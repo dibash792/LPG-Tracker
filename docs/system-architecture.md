@@ -65,3 +65,4 @@
    - `StockEngine`: Double-entry physical movement calculus ensuring zero unrecorded cylinder leaks.
 3. **Audit Ledger Engine**:
    - Sequential block indexer with SHA-256 HMAC cryptographic chaining using server master secret.
+

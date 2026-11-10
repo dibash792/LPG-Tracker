@@ -11,3 +11,4 @@ export const config = {
   standardTareWeightToleranceGrams: 100, // NBSM NS:533 standard
   gazettedDomesticPriceNpr: 1895.00,
 };
+

@@ -96,3 +96,4 @@ export const submitCitizenComplaint = (req, res) => {
     complaint
   });
 };
+

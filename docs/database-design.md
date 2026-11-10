@@ -377,3 +377,4 @@ Configurable operational parameters.
 - `description` (TEXT)
 - `last_modified_by` (UUID, FK -> users.id)
 - `updated_at` (TIMESTAMPTZ DEFAULT NOW())
+

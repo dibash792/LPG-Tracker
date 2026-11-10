@@ -48,7 +48,7 @@ export const CylinderScannerModal: React.FC<CylinderScannerModalProps> = ({
     if (isScanning && currentProgress < expectedQty) {
       timer = setTimeout(() => {
         const nextIdx = currentProgress + 1;
-        // Simulate real-world 2% tare variance or missing tag
+        // Simulate real-world tare variance or missing tag
         const isDamaged = nextIdx === Math.floor(expectedQty * 0.4) || nextIdx === Math.floor(expectedQty * 0.7);
         const serialTag = `NP-LPG-${2083000 + nextIdx}`;
         
@@ -85,56 +85,56 @@ export const CylinderScannerModal: React.FC<CylinderScannerModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-60 bg-navy-950/70 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 animate-in zoom-in-95 duration-150 space-y-4">
+    <div className="fixed inset-0 z-60 bg-brand-950/75 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-brand-900 rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 dark:border-brand-800 animate-in zoom-in-95 duration-150 space-y-4">
         
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-slate-100 pb-3">
+        <div className="flex items-start justify-between border-b border-slate-100 dark:border-brand-800 pb-3">
           <div className="flex items-center space-x-2">
-            <div className="p-2 bg-teal-50 text-teal-700 rounded-xl">
+            <div className="p-2 bg-flame-50 dark:bg-flame-950/40 text-flame-600 dark:text-flame-400 rounded-xl border border-flame-200 dark:border-flame-900/60">
               <Scan className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-navy-950">
+              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
                 RFID & Barcode Inbound Bay Verification
               </h3>
-              <p className="text-xs text-slate-500">
-                Consignment: <span className="font-mono font-bold">{consignmentId}</span> ({plantName} → {distributorName})
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Consignment: <span className="font-mono font-bold text-slate-700 dark:text-slate-300">{consignmentId}</span> ({plantName} → {distributorName})
               </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100"
+            className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-brand-800"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Scan Status Gauge */}
-        <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+        <div className="p-4 bg-slate-50 dark:bg-brand-950 rounded-xl border border-slate-200 dark:border-brand-800 space-y-2">
           <div className="flex items-center justify-between text-xs font-semibold">
-            <span className="text-slate-600">Simulated Conveyor Scanner:</span>
-            <span className="font-mono text-navy-950">
+            <span className="text-slate-600 dark:text-slate-400">Simulated Conveyor Scanner:</span>
+            <span className="font-mono text-slate-900 dark:text-slate-100">
               {currentProgress} / {expectedQty} Units Scanned
             </span>
           </div>
 
-          <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+          <div className="w-full bg-slate-200 dark:bg-brand-800 rounded-full h-3 overflow-hidden">
             <div 
-              className="bg-teal-500 h-3 rounded-full transition-all duration-75"
+              className="bg-flame-500 h-3 rounded-full transition-all duration-75"
               style={{ width: `${(currentProgress / expectedQty) * 100}%` }}
             />
           </div>
 
-          <div className="flex justify-between items-center text-[11px] pt-1 text-slate-500">
-            <span className="text-emerald-700 font-semibold flex items-center space-x-1">
+          <div className="flex justify-between items-center text-[11px] pt-1 text-slate-500 dark:text-slate-400">
+            <span className="text-emerald-700 dark:text-emerald-400 font-semibold flex items-center space-x-1">
               <CheckCircle2 className="w-3.5 h-3.5" />
               <span>{validCount} Verified Compliant (14.2kg standard)</span>
             </span>
             {defectiveItems.length > 0 && (
-              <span className="text-red-600 font-semibold flex items-center space-x-1">
+              <span className="text-red-600 dark:text-red-400 font-semibold flex items-center space-x-1">
                 <AlertTriangle className="w-3.5 h-3.5" />
                 <span>{defectiveItems.length} Unmatched / Damaged Valve Tag</span>
               </span>
@@ -144,22 +144,22 @@ export const CylinderScannerModal: React.FC<CylinderScannerModalProps> = ({
 
         {/* Scanned Serial Stream */}
         <div className="space-y-1.5">
-          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
             Real-Time Tare Scale & Serial Log:
           </span>
 
-          <div className="h-44 overflow-y-auto bg-slate-900 text-slate-200 rounded-xl p-3 font-mono text-xs space-y-1">
+          <div className="h-44 overflow-y-auto bg-brand-950 dark:bg-black/60 text-slate-200 rounded-xl p-3 font-mono text-xs space-y-1 border border-brand-850">
             {scannedItems.length === 0 ? (
               <div className="h-full flex items-center justify-center text-slate-500 text-xs">
                 Scanner idle. Click "Start Conveyor Scanner" below to simulate truck offloading.
               </div>
             ) : (
               scannedItems.slice(0, 15).map((item, idx) => (
-                <div key={idx} className="flex justify-between items-center text-[11px] py-0.5 border-b border-slate-800">
+                <div key={idx} className="flex justify-between items-center text-[11px] py-0.5 border-b border-brand-850">
                   <span className="text-slate-400">#{item.serial}</span>
                   <span className="text-slate-300">Net Tare: {item.tareWeight} kg</span>
                   {item.status === 'VALID' ? (
-                    <span className="text-teal-400 font-semibold">[MATCHED OK]</span>
+                    <span className="text-emerald-400 font-semibold">[MATCHED OK]</span>
                   ) : (
                     <span className="text-red-400 font-bold">[TAG UNREADABLE / VARIANCE]</span>
                   )}
@@ -170,10 +170,10 @@ export const CylinderScannerModal: React.FC<CylinderScannerModalProps> = ({
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+        <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-brand-800">
           <button
             onClick={handleReset}
-            className="px-3 py-1.5 text-xs text-slate-600 hover:text-slate-800 flex items-center space-x-1"
+            className="px-3 py-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 flex items-center space-x-1"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset Scanner</span>
@@ -183,7 +183,7 @@ export const CylinderScannerModal: React.FC<CylinderScannerModalProps> = ({
             {!isScanning && currentProgress < expectedQty && (
               <button
                 onClick={() => setIsScanning(true)}
-                className="px-4 py-2 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-xs transition-colors flex items-center space-x-1.5"
+                className="px-4 py-2 text-xs font-bold text-white bg-flame-600 hover:bg-flame-500 rounded-xl shadow-xs transition-colors flex items-center space-x-1.5"
               >
                 <Play className="w-3.5 h-3.5" />
                 <span>{currentProgress === 0 ? 'Start Conveyor Scanner' : 'Resume Scan'}</span>
@@ -193,7 +193,7 @@ export const CylinderScannerModal: React.FC<CylinderScannerModalProps> = ({
             {isScanning && (
               <button
                 onClick={() => setIsScanning(false)}
-                className="px-4 py-2 text-xs font-bold text-amber-900 bg-amber-100 rounded-xl"
+                className="px-4 py-2 text-xs font-bold text-amber-900 bg-amber-200 hover:bg-amber-300 rounded-xl transition-colors"
               >
                 Pause Scan
               </button>
@@ -202,7 +202,7 @@ export const CylinderScannerModal: React.FC<CylinderScannerModalProps> = ({
             {currentProgress >= expectedQty && (
               <button
                 onClick={handleFinish}
-                className="px-4 py-2 text-xs font-bold text-navy-950 bg-teal-400 hover:bg-teal-300 rounded-xl shadow-xs transition-colors flex items-center space-x-1.5"
+                className="px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl shadow-xs transition-colors flex items-center space-x-1.5"
               >
                 <Check className="w-4 h-4" />
                 <span>Accept Delivery & File Receiving Log</span>
@@ -215,3 +215,4 @@ export const CylinderScannerModal: React.FC<CylinderScannerModalProps> = ({
     </div>
   );
 };
+export default CylinderScannerModal;

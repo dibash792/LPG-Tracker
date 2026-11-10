@@ -93,3 +93,4 @@ export const registerOrganization = (req, res) => {
     organization: newOrg
   });
 };
+

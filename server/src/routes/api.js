@@ -55,3 +55,4 @@ router.get('/reports/overview', authenticateToken, reportCtrl.getNationalOvervie
 router.get('/reports/provinces', authenticateToken, reportCtrl.getProvincialQuotas);
 
 export default router;
+

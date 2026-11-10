@@ -36,3 +36,4 @@ LPG Tracker employs a multi-layered verification strategy covering frontend resp
   - Contrast ratios $\ge 4.5:1$ on text and UI indicators.
   - Color is never used alone to convey status (paired with text and distinct iconography).
   - High-visibility focus states and accessible button hit targets.
+

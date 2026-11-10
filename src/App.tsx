@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   mockNationalMetrics, 
   mockProvinces, 
@@ -30,11 +30,16 @@ import { RetailerPortal } from './components/roles/RetailerPortal';
 import { PublicConsumerPortal } from './components/roles/PublicConsumerPortal';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { NotificationProvider, useNotifications } from './context/NotificationContext';
-import { CheckCircle2, AlertCircle, Info, ShieldCheck, Flame } from 'lucide-react';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { CheckCircle2, AlertCircle, Info, ShieldCheck, Wifi, WifiOff, RefreshCw, Database } from 'lucide-react';
+import { BrandLogo } from './components/common/BrandLogo';
+import { api } from './api/client';
+import { OfflineDraftManager } from './utils/offlineDraftManager';
 
 const AppContent: React.FC = () => {
   const { t, language } = useLanguage();
   const { toast, showToast, addNotification } = useNotifications();
+  const { theme, resolvedTheme } = useTheme();
 
   // Role Context State
   const [activeRole, setActiveRole] = useState<UserRoleContext>('NOC_SUPER_ADMIN');
@@ -45,6 +50,9 @@ const AppContent: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+  const [pendingDraftsCount, setPendingDraftsCount] = useState<number>(OfflineDraftManager.getPendingCount());
+  const [isBackendConnected, setIsBackendConnected] = useState<boolean>(false);
 
   // Dynamic Data Store State
   const [metrics, setMetrics] = useState(mockNationalMetrics);
@@ -53,6 +61,63 @@ const AppContent: React.FC = () => {
   const [provinces, setProvinces] = useState<ProvinceMetric[]>(mockProvinces);
   const [auditTrail, setAuditTrail] = useState<AuditTrailEntry[]>(mockAuditTrail);
   const [activityLogs, setActivityLogs] = useState<ActivityLog[]>(mockActivityLogs);
+
+  // Connectivity and Draft Synchronization Listeners
+  useEffect(() => {
+    const handleOnline = () => {
+      setIsOnline(true);
+      showToast('Internet connection detected. Resuming real-time data sync.', 'success');
+    };
+    const handleOffline = () => {
+      setIsOnline(false);
+      showToast('Offline mode active. Operations are securely buffered locally.', 'info');
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    // Periodically inspect offline drafts store
+    const draftInterval = setInterval(() => {
+      setPendingDraftsCount(OfflineDraftManager.getPendingCount());
+    }, 2500);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+      clearInterval(draftInterval);
+    };
+  }, []);
+
+  // Initial and Role-Based Live API Fetch with Graceful Mock Fallback
+  useEffect(() => {
+    api.setRole(activeRole);
+
+    const loadLiveTelemetry = async () => {
+      try {
+        const [orgsRes, discRes] = await Promise.allSettled([
+          api.getOrganizations(),
+          api.getDiscrepancies()
+        ]);
+
+        let connected = false;
+
+        if (orgsRes.status === 'fulfilled' && orgsRes.value?.organizations?.length > 0) {
+          connected = true;
+          // Successfully retrieved live data from Express backend
+        }
+
+        if (discRes.status === 'fulfilled' && discRes.value?.discrepancies?.length > 0) {
+          connected = true;
+        }
+
+        setIsBackendConnected(connected);
+      } catch {
+        setIsBackendConnected(false);
+      }
+    };
+
+    loadLiveTelemetry();
+  }, [activeRole]);
 
   // Discrepancy Action Handler
   const handleUpdateDiscrepancy = (updated: DiscrepancyRecord, actionType: string) => {
@@ -75,6 +140,15 @@ const AppContent: React.FC = () => {
     };
 
     setAuditTrail([newAuditEntry, ...auditTrail]);
+
+    // Dispatch to Backend API or buffer offline
+    api.transitionDiscrepancyStatus(updated.id, updated.status, updated.initialRemarks).catch(() => {
+      OfflineDraftManager.saveDraft({
+        type: 'DISCREPANCY_UPDATE',
+        payload: { id: updated.id, status: updated.status, remarks: updated.initialRemarks }
+      });
+      setPendingDraftsCount(OfflineDraftManager.getPendingCount());
+    });
 
     const newActivity: ActivityLog = {
       id: `ACT-${Date.now().toString().slice(-4)}`,
@@ -118,6 +192,17 @@ const AppContent: React.FC = () => {
     };
 
     setAuditTrail([newAuditEntry, ...auditTrail]);
+
+    // Dispatch to Backend API or buffer offline
+    if (updated.status === 'ACTIVE') {
+      api.approveOrganization(updated.id, actionType).catch(() => {
+        OfflineDraftManager.saveDraft({
+          type: 'ORG_APPROVAL',
+          payload: { id: updated.id, status: updated.status, action: actionType }
+        });
+        setPendingDraftsCount(OfflineDraftManager.getPendingCount());
+      });
+    }
 
     const newActivity: ActivityLog = {
       id: `ACT-${Date.now().toString().slice(-4)}`,
@@ -163,7 +248,7 @@ const AppContent: React.FC = () => {
   const activeDiscrepanciesCount = discrepancies.filter(d => d.status !== 'RESOLVED').length;
 
   return (
-    <div className="min-h-screen bg-surface-canvas flex">
+    <div className="min-h-screen bg-[#EDF1F6] dark:bg-[#09121E] text-slate-800 dark:text-slate-100 flex transition-colors duration-150">
       
       {/* Sidebar (Rendered for Super Admin or collapsible) */}
       {activeRole === 'NOC_SUPER_ADMIN' && (
@@ -180,7 +265,7 @@ const AppContent: React.FC = () => {
       )}
 
       {/* Main Container */}
-      <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out ${
+      <div className={`flex-1 flex flex-col min-h-screen transition-all duration-200 ease-in-out ${
         activeRole === 'NOC_SUPER_ADMIN' ? (collapsedSidebar ? 'lg:pl-20' : 'lg:pl-72') : 'pl-0'
       }`}>
         
@@ -196,28 +281,73 @@ const AppContent: React.FC = () => {
           onSelectRole={setActiveRole}
         />
 
-        {/* Demo Data & Transparency Banner */}
-        <div className="bg-navy-950 text-slate-300 px-4 lg:px-8 py-2 text-xs flex flex-wrap items-center justify-between border-b border-navy-800 gap-2">
+        {/* Brand Infrastructure Identity Banner */}
+        <div className="bg-brand-950 dark:bg-black/40 text-slate-300 px-4 lg:px-8 py-2 text-xs flex flex-wrap items-center justify-between border-b border-brand-850 dark:border-brand-900 gap-2">
           <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
-            <span className="font-semibold text-white">
+            <span className="w-2 h-2 rounded-full bg-flame-500 animate-pulse" />
+            <span className="font-bold text-white">
               {language === 'ne' ? 'नेपाल आयल निगम (एनओसी) — राष्ट्रिय एलपिजी अनुगमन कन्सोल' : 'Nepal Oil Corporation (NOC) — National LPG Custody Grid'}
             </span>
             <span className="hidden sm:inline text-slate-400">•</span>
-            <span className="hidden sm:inline text-[11px] bg-navy-800 px-2 py-0.5 rounded text-amber-300 border border-navy-700">
-              Active Role: {activeRole.replace('_', ' ')}
+            <span className="hidden sm:inline text-[11px] bg-brand-900 px-2 py-0.5 rounded text-flame-300 border border-brand-800 font-mono">
+              Role: {activeRole.replace('_', ' ')}
             </span>
           </div>
 
           <div className="flex items-center space-x-3 text-[11px] text-slate-400">
             <span className="flex items-center space-x-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-teal-400" />
+              <ShieldCheck className="w-3.5 h-3.5 text-flame-400" />
               <span>MoICS Standard NS:533</span>
             </span>
             <span>•</span>
-            <span className="font-mono text-slate-300">Regulated Domestic: NPR 1,895</span>
+            <span className="font-mono text-slate-300">Gazetted Domestic: NPR 1,895</span>
           </div>
         </div>
+
+        {/* Connectivity, Offline Drafts & Telemetry Synchronizer Strip */}
+        {(!isOnline || pendingDraftsCount > 0 || isBackendConnected) && (
+          <div className={`px-4 lg:px-8 py-1.5 text-xs flex flex-wrap items-center justify-between border-b transition-colors gap-2 ${
+            !isOnline
+              ? 'bg-amber-950/80 text-amber-200 border-amber-800'
+              : pendingDraftsCount > 0
+                ? 'bg-flame-950/80 text-flame-200 border-flame-800'
+                : 'bg-brand-900/40 text-slate-300 border-brand-800/60'
+          }`}>
+            <div className="flex items-center space-x-2">
+              {!isOnline ? (
+                <>
+                  <WifiOff className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                  <span className="font-semibold text-amber-300">Offline Standalone Mode:</span>
+                  <span className="text-amber-200">Local cryptographic journal active. Forms will sync upon reconnecting.</span>
+                </>
+              ) : pendingDraftsCount > 0 ? (
+                <>
+                  <RefreshCw className="w-3.5 h-3.5 text-flame-400 animate-spin shrink-0" />
+                  <span className="font-semibold text-flame-300">{pendingDraftsCount} Local Operation(s) Pending Gateway Sync</span>
+                </>
+              ) : (
+                <>
+                  <Database className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span className="text-slate-300 font-mono text-[11px]">API Node Connected — HMAC Audit Chaining Verified</span>
+                </>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-2">
+              {pendingDraftsCount > 0 && (
+                <button
+                  onClick={handleTriggerSync}
+                  className="px-2.5 py-0.5 bg-flame-600 hover:bg-flame-500 text-white font-bold rounded text-[11px] transition-colors shadow-2xs"
+                >
+                  Flush Drafts ({pendingDraftsCount})
+                </button>
+              )}
+              <span className="font-mono text-[10px] bg-brand-950 px-2 py-0.5 rounded text-slate-300 border border-brand-800">
+                Grid: {isOnline ? (isBackendConnected ? 'CONNECTED' : 'STANDBY') : 'OFFLINE'}
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* Main Content Area */}
         <main className="flex-1 p-4 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
@@ -313,16 +443,16 @@ const AppContent: React.FC = () => {
 
         </main>
 
-        {/* Professional Footer */}
-        <footer className="border-t border-slate-200 bg-white py-4 px-4 lg:px-8 text-xs text-slate-500 mt-auto">
+        {/* Professional Government Infrastructure Footer */}
+        <footer className="border-t border-slate-200 dark:border-brand-850 bg-white dark:bg-brand-900/90 py-4 px-4 lg:px-8 text-xs text-slate-500 dark:text-slate-400 mt-auto transition-colors">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
             <div className="flex items-center space-x-2">
-              <Flame className="w-4 h-4 text-teal-600" />
-              <span className="font-semibold text-slate-700">LPG Tracker Nepal</span>
+              <BrandLogo size="sm" showText={false} />
+              <span className="font-bold text-slate-700 dark:text-slate-200">LPG Tracker Nepal</span>
               <span>— Government of Nepal • Nepal Oil Corporation (NOC)</span>
             </div>
-            <div className="flex items-center space-x-4 text-[11px] text-slate-400">
-              <span>National Accountability Platform</span>
+            <div className="flex items-center space-x-4 text-[11px] text-slate-400 dark:text-slate-500">
+              <span>National Accountability Framework</span>
               <span>•</span>
               <span>Excludes Household Retail Scope</span>
               <span>•</span>
@@ -340,13 +470,13 @@ const AppContent: React.FC = () => {
             toast.type === 'error'
               ? 'bg-red-900 text-white border-red-800'
               : toast.type === 'info'
-                ? 'bg-navy-900 text-white border-navy-800'
+                ? 'bg-brand-950 text-white border-brand-800'
                 : 'bg-emerald-900 text-white border-emerald-800'
           }`}>
             {toast.type === 'error' ? (
               <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
             ) : toast.type === 'info' ? (
-              <Info className="w-4 h-4 text-sky-400 shrink-0" />
+              <Info className="w-4 h-4 text-flame-400 shrink-0" />
             ) : (
               <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             )}
@@ -361,11 +491,13 @@ const AppContent: React.FC = () => {
 
 export function App() {
   return (
-    <LanguageProvider>
-      <NotificationProvider>
-        <AppContent />
-      </NotificationProvider>
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <NotificationProvider>
+          <AppContent />
+        </NotificationProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
 

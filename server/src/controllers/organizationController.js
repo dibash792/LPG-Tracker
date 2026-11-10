@@ -130,3 +130,4 @@ export const toggleSuspension = (req, res) => {
     organization: org
   });
 };
+

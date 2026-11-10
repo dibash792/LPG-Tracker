@@ -351,3 +351,4 @@ class RelationalDatabaseStore {
 }
 
 export const db = new RelationalDatabaseStore();
+

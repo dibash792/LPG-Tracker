@@ -437,3 +437,4 @@ CREATE TABLE IF NOT EXISTS system_settings (
     last_modified_by UUID REFERENCES users(id),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+

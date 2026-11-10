@@ -57,3 +57,4 @@ Nepal consumes approximately 40,000 to 45,000 Metric Tonnes of Liquefied Petrole
 ### 3.5 Immutable Audit Trail
 - Sequential indexing with SHA-256 HMAC cryptographic signatures chaining previous sequence hashes.
 - Tamper detection validator ensuring zero silent modifications to quota, approval, or discrepancy records.
+
