@@ -281,3 +281,4 @@ export const ProvinceStockMap: React.FC<ProvinceStockMapProps> = ({
     </div>
   );
 };
+

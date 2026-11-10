@@ -15,7 +15,7 @@ import {
   ActivityLog 
 } from './types';
 import { Sidebar, NavigationTab } from './components/layout/Sidebar';
-import { Header } from './components/layout/Header';
+import { Header, UserRoleContext } from './components/layout/Header';
 import { OverviewView } from './components/dashboard/OverviewView';
 import { DistributionFlowVisualizer } from './components/dashboard/DistributionFlowVisualizer';
 import { DiscrepancyManagementView } from './components/dashboard/DiscrepancyManagementView';
@@ -24,6 +24,10 @@ import { ProvinceStockMap } from './components/dashboard/ProvinceStockMap';
 import { LiveActivityFeed } from './components/dashboard/LiveActivityFeed';
 import { AuditLogView } from './components/dashboard/AuditLogView';
 import { ReportsAnalyticsView } from './components/dashboard/ReportsAnalyticsView';
+import { PlantOperatorPortal } from './components/roles/PlantOperatorPortal';
+import { DistributorPortal } from './components/roles/DistributorPortal';
+import { RetailerPortal } from './components/roles/RetailerPortal';
+import { PublicConsumerPortal } from './components/roles/PublicConsumerPortal';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { NotificationProvider, useNotifications } from './context/NotificationContext';
 import { CheckCircle2, AlertCircle, Info, ShieldCheck, Flame } from 'lucide-react';
@@ -32,6 +36,9 @@ const AppContent: React.FC = () => {
   const { t, language } = useLanguage();
   const { toast, showToast, addNotification } = useNotifications();
 
+  // Role Context State
+  const [activeRole, setActiveRole] = useState<UserRoleContext>('NOC_SUPER_ADMIN');
+
   // Navigation State
   const [currentTab, setCurrentTab] = useState<NavigationTab>('dashboard');
   const [collapsedSidebar, setCollapsedSidebar] = useState(false);
@@ -39,7 +46,7 @@ const AppContent: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSyncing, setIsSyncing] = useState(false);
 
-  // Dynamic Data Store State (Allows Super Admin changes to persist in live session)
+  // Dynamic Data Store State
   const [metrics, setMetrics] = useState(mockNationalMetrics);
   const [discrepancies, setDiscrepancies] = useState<DiscrepancyRecord[]>(mockDiscrepancies);
   const [organizations, setOrganizations] = useState<Organization[]>(mockOrganizations);
@@ -47,11 +54,10 @@ const AppContent: React.FC = () => {
   const [auditTrail, setAuditTrail] = useState<AuditTrailEntry[]>(mockAuditTrail);
   const [activityLogs, setActivityLogs] = useState<ActivityLog[]>(mockActivityLogs);
 
-  // Discrepancy Action Handler: Updates case and appends cryptographic audit record
+  // Discrepancy Action Handler
   const handleUpdateDiscrepancy = (updated: DiscrepancyRecord, actionType: string) => {
     setDiscrepancies(prev => prev.map(d => d.id === updated.id ? updated : d));
 
-    // Append to Audit Trail
     const newSeq = auditTrail.length > 0 ? auditTrail[0].sequenceNumber + 1 : 1000;
     const newAuditEntry: AuditTrailEntry = {
       id: `AUD-${Date.now().toString().slice(-5)}`,
@@ -70,7 +76,6 @@ const AppContent: React.FC = () => {
 
     setAuditTrail([newAuditEntry, ...auditTrail]);
 
-    // Append to Live Activity Feed
     const newActivity: ActivityLog = {
       id: `ACT-${Date.now().toString().slice(-4)}`,
       timestamp: new Date().toISOString(),
@@ -88,16 +93,14 @@ const AppContent: React.FC = () => {
 
     setActivityLogs([newActivity, ...activityLogs]);
 
-    // Recalculate metrics
     const openCases = discrepancies.filter(d => d.id !== updated.id ? d.status !== 'RESOLVED' : updated.status !== 'RESOLVED').length;
     setMetrics(m => ({ ...m, activeDiscrepanciesCount: openCases }));
   };
 
-  // Organization Action Handler: Approves, rejects or suspends entities
+  // Organization Action Handler
   const handleUpdateOrg = (updated: Organization, actionType: string) => {
     setOrganizations(prev => prev.map(o => o.id === updated.id ? updated : o));
 
-    // Append to Audit Trail
     const newSeq = auditTrail.length > 0 ? auditTrail[0].sequenceNumber + 1 : 1000;
     const newAuditEntry: AuditTrailEntry = {
       id: `AUD-${Date.now().toString().slice(-5)}`,
@@ -116,7 +119,6 @@ const AppContent: React.FC = () => {
 
     setAuditTrail([newAuditEntry, ...auditTrail]);
 
-    // Append to Activity Feed
     const newActivity: ActivityLog = {
       id: `ACT-${Date.now().toString().slice(-4)}`,
       timestamp: new Date().toISOString(),
@@ -134,7 +136,6 @@ const AppContent: React.FC = () => {
 
     setActivityLogs([newActivity, ...activityLogs]);
 
-    // Update pending approvals count
     const pending = organizations.filter(o => o.id !== updated.id ? o.status === 'PENDING_APPROVAL' : updated.status === 'PENDING_APPROVAL').length;
     setMetrics(m => ({ ...m, pendingApprovalsCount: pending }));
   };
@@ -142,27 +143,6 @@ const AppContent: React.FC = () => {
   // Province Quota Handler
   const handleUpdateQuota = (provId: number, newQuota: number) => {
     setProvinces(prev => prev.map(p => p.id === provId ? { ...p, monthlyQuotaMT: newQuota } : p));
-
-    const prov = provinces.find(p => p.id === provId);
-    if (prov) {
-      const newSeq = auditTrail.length > 0 ? auditTrail[0].sequenceNumber + 1 : 1000;
-      const newAuditEntry: AuditTrailEntry = {
-        id: `AUD-${Date.now().toString().slice(-5)}`,
-        sequenceNumber: newSeq,
-        timestamp: new Date().toISOString(),
-        actorId: 'NOC-USR-004',
-        actorName: 'Dr. Chandan Adhikari',
-        actorRole: 'NOC_SUPER_ADMIN',
-        actionType: 'QUOTA_REALLOCATION',
-        targetResource: `PROV_${provId}_${prov.nameEn.toUpperCase()}`,
-        previousState: `QUOTA: ${prov.monthlyQuotaMT} MT`,
-        newState: `QUOTA: ${newQuota} MT`,
-        ipAddress: '103.10.232.14',
-        deviceFingerprint: 'CHROME-WIN-SECURE-SHA256',
-        tamperProofHash: Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join(''),
-      };
-      setAuditTrail([newAuditEntry, ...auditTrail]);
-    }
   };
 
   // Live Sync Trigger
@@ -185,21 +165,23 @@ const AppContent: React.FC = () => {
   return (
     <div className="min-h-screen bg-surface-canvas flex">
       
-      {/* Sidebar */}
-      <Sidebar
-        currentTab={currentTab}
-        onSelectTab={setCurrentTab}
-        collapsed={collapsedSidebar}
-        onToggleCollapse={() => setCollapsedSidebar(!collapsedSidebar)}
-        discrepancyCount={activeDiscrepanciesCount}
-        pendingApprovalsCount={pendingApprovalsCount}
-        isOpenMobile={isMobileMenuOpen}
-        onCloseMobile={() => setIsMobileMenuOpen(false)}
-      />
+      {/* Sidebar (Rendered for Super Admin or collapsible) */}
+      {activeRole === 'NOC_SUPER_ADMIN' && (
+        <Sidebar
+          currentTab={currentTab}
+          onSelectTab={setCurrentTab}
+          collapsed={collapsedSidebar}
+          onToggleCollapse={() => setCollapsedSidebar(!collapsedSidebar)}
+          discrepancyCount={activeDiscrepanciesCount}
+          pendingApprovalsCount={pendingApprovalsCount}
+          isOpenMobile={isMobileMenuOpen}
+          onCloseMobile={() => setIsMobileMenuOpen(false)}
+        />
+      )}
 
       {/* Main Container */}
       <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out ${
-        collapsedSidebar ? 'lg:pl-20' : 'lg:pl-72'
+        activeRole === 'NOC_SUPER_ADMIN' ? (collapsedSidebar ? 'lg:pl-20' : 'lg:pl-72') : 'pl-0'
       }`}>
         
         {/* Header */}
@@ -210,6 +192,8 @@ const AppContent: React.FC = () => {
           onSelectTab={setCurrentTab}
           onTriggerSync={handleTriggerSync}
           isSyncing={isSyncing}
+          activeRole={activeRole}
+          onSelectRole={setActiveRole}
         />
 
         {/* Demo Data & Transparency Banner */}
@@ -217,89 +201,114 @@ const AppContent: React.FC = () => {
           <div className="flex items-center space-x-2">
             <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
             <span className="font-semibold text-white">
-              {language === 'ne' ? 'नेपाल आयल निगम (एनओसी) — केन्द्रीय सुपरीवेक्षण कन्सोल' : 'Nepal Oil Corporation (NOC) — Central Custody & Reconciliation Console'}
+              {language === 'ne' ? 'नेपाल आयल निगम (एनओसी) — राष्ट्रिय एलपिजी अनुगमन कन्सोल' : 'Nepal Oil Corporation (NOC) — National LPG Custody Grid'}
             </span>
             <span className="hidden sm:inline text-slate-400">•</span>
             <span className="hidden sm:inline text-[11px] bg-navy-800 px-2 py-0.5 rounded text-amber-300 border border-navy-700">
-              Demo Simulation Mode (Realistic Data)
+              Active Role: {activeRole.replace('_', ' ')}
             </span>
           </div>
 
           <div className="flex items-center space-x-3 text-[11px] text-slate-400">
             <span className="flex items-center space-x-1">
               <ShieldCheck className="w-3.5 h-3.5 text-teal-400" />
-              <span>MoICS Statutory Standard NS:533</span>
+              <span>MoICS Standard NS:533</span>
             </span>
             <span>•</span>
-            <span className="font-mono text-slate-300">Auth: Babarmahal-HQ</span>
+            <span className="font-mono text-slate-300">Regulated Domestic: NPR 1,895</span>
           </div>
         </div>
 
         {/* Main Content Area */}
         <main className="flex-1 p-4 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
           
-          {currentTab === 'dashboard' && (
-            <OverviewView
-              metrics={metrics}
-              discrepancies={discrepancies}
-              activities={activityLogs}
-              organizations={organizations}
-              provinces={provinces}
-              onNavigateTab={setCurrentTab}
-              onSelectDiscrepancy={() => setCurrentTab('discrepancies')}
-            />
+          {/* 1. PLANT OPERATOR VIEW */}
+          {activeRole === 'PLANT_OPERATOR' && (
+            <PlantOperatorPortal />
           )}
 
-          {currentTab === 'distribution-chain' && (
-            <div className="space-y-6">
-              <DistributionFlowVisualizer />
-              <ProvinceStockMap
-                provinces={provinces}
-                onUpdateQuota={handleUpdateQuota}
-              />
-            </div>
+          {/* 2. DISTRIBUTOR VIEW */}
+          {activeRole === 'DISTRIBUTOR_MANAGER' && (
+            <DistributorPortal />
           )}
 
-          {currentTab === 'discrepancies' && (
-            <DiscrepancyManagementView
-              discrepancies={discrepancies}
-              onUpdateDiscrepancy={handleUpdateDiscrepancy}
-            />
+          {/* 3. RETAILER VIEW */}
+          {activeRole === 'RETAILER_OPERATOR' && (
+            <RetailerPortal />
           )}
 
-          {currentTab === 'organizations' && (
-            <OrganizationManagementView
-              organizations={organizations}
-              onUpdateOrg={handleUpdateOrg}
-              initialFilter="ALL"
-            />
+          {/* 4. PUBLIC CITIZEN VIEW */}
+          {activeRole === 'PUBLIC_CITIZEN' && (
+            <PublicConsumerPortal />
           )}
 
-          {currentTab === 'approvals' && (
-            <OrganizationManagementView
-              organizations={organizations}
-              onUpdateOrg={handleUpdateOrg}
-              initialFilter="PENDING_APPROVAL"
-            />
-          )}
+          {/* 5. NOC SUPER ADMIN CONSOLE (DEFAULT) */}
+          {activeRole === 'NOC_SUPER_ADMIN' && (
+            <>
+              {currentTab === 'dashboard' && (
+                <OverviewView
+                  metrics={metrics}
+                  discrepancies={discrepancies}
+                  activities={activityLogs}
+                  organizations={organizations}
+                  provinces={provinces}
+                  onNavigateTab={setCurrentTab}
+                  onSelectDiscrepancy={() => setCurrentTab('discrepancies')}
+                />
+              )}
 
-          {currentTab === 'provinces' && (
-            <ProvinceStockMap
-              provinces={provinces}
-              onUpdateQuota={handleUpdateQuota}
-            />
-          )}
+              {currentTab === 'distribution-chain' && (
+                <div className="space-y-6">
+                  <DistributionFlowVisualizer />
+                  <ProvinceStockMap
+                    provinces={provinces}
+                    onUpdateQuota={handleUpdateQuota}
+                  />
+                </div>
+              )}
 
-          {currentTab === 'activity' && (
-            <LiveActivityFeed logs={activityLogs} />
-          )}
+              {currentTab === 'discrepancies' && (
+                <DiscrepancyManagementView
+                  discrepancies={discrepancies}
+                  onUpdateDiscrepancy={handleUpdateDiscrepancy}
+                />
+              )}
 
-          {currentTab === 'audit-log' && (
-            <AuditLogView entries={auditTrail} />
-          )}
+              {currentTab === 'organizations' && (
+                <OrganizationManagementView
+                  organizations={organizations}
+                  onUpdateOrg={handleUpdateOrg}
+                  initialFilter="ALL"
+                />
+              )}
 
-          {currentTab === 'reports' && (
-            <ReportsAnalyticsView />
+              {currentTab === 'approvals' && (
+                <OrganizationManagementView
+                  organizations={organizations}
+                  onUpdateOrg={handleUpdateOrg}
+                  initialFilter="PENDING_APPROVAL"
+                />
+              )}
+
+              {currentTab === 'provinces' && (
+                <ProvinceStockMap
+                  provinces={provinces}
+                  onUpdateQuota={handleUpdateQuota}
+                />
+              )}
+
+              {currentTab === 'activity' && (
+                <LiveActivityFeed logs={activityLogs} />
+              )}
+
+              {currentTab === 'audit-log' && (
+                <AuditLogView entries={auditTrail} />
+              )}
+
+              {currentTab === 'reports' && (
+                <ReportsAnalyticsView />
+              )}
+            </>
           )}
 
         </main>

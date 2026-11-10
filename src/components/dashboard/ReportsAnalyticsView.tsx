@@ -223,3 +223,4 @@ export const ReportsAnalyticsView: React.FC = () => {
     </div>
   );
 };
+

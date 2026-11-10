@@ -180,3 +180,4 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({ logs }) => {
     </div>
   );
 };
+

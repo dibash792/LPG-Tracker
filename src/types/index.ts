@@ -149,3 +149,4 @@ export interface ProvinceMetric {
   stockStatus: 'OPTIMAL' | 'MODERATE' | 'LOW_ALERT';
   discrepancyCount: number;
 }
+

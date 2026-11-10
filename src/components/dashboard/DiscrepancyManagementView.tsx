@@ -584,3 +584,4 @@ export const DiscrepancyManagementView: React.FC<DiscrepancyManagementViewProps>
     </div>
   );
 };
+
