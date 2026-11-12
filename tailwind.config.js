@@ -8,34 +8,34 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Primary Brand - Deep Royal Navy
+        // Primary Brand - Deep Industrial Blue Foundation
         brand: {
-          950: '#071320',
-          900: '#0D1E33',
-          850: '#10243D',
-          800: '#142C4B',
-          700: '#1C3B63',
-          600: '#254E83',
-          500: '#3164A4',
-          400: '#4A7FBF',
-          300: '#7BA4D5',
-          200: '#ADC8E8',
-          100: '#DCE8F7',
-          50: '#EFF5FB',
+          950: '#0E1F2B',
+          900: '#17364A', // Deep Industrial Blue
+          850: '#23455C',
+          800: '#34566D', // Steel Blue
+          700: '#4B6C83',
+          600: '#607D90', // Industrial Slate
+          500: '#7894A7',
+          400: '#94ABBD',
+          300: '#B5C5D3',
+          200: '#D2DDE6',
+          100: '#E8EEF3',
+          50: '#F4F7F9',
         },
-        // Controlled Brand Accent - Refined Natural Flame (Orange / Ember / Coral)
+        // Controlled Brand Accent - Refined Natural Flame & Amber
         flame: {
-          950: '#431407',
-          900: '#7C2D12',
-          800: '#9A3412',
-          700: '#C2410C', // Deep Ember
-          600: '#EA580C', // Vibrant Natural Flame
-          500: '#F97316', // Radiant Warm Orange
-          400: '#FB923C', // Warm Amber/Coral glow
-          300: '#FDBA74',
-          200: '#FED7AA',
-          100: '#FFEDD5',
-          50: '#FFF7ED',
+          950: '#3D1606',
+          900: '#6E280C',
+          800: '#A84A22', // Burnt Orange
+          700: '#C8572A',
+          600: '#E56B35', // Natural Flame Orange
+          500: '#F3A34A', // Natural Amber
+          400: '#F7BC72',
+          300: '#FBD59E',
+          200: '#FDE7C7',
+          100: '#FEF3E3',
+          50: '#FFFBF5',
         },
         // Semantic: Success (strictly for verified / matched states)
         statusSuccess: {
@@ -77,20 +77,24 @@ export default {
           darkBorder: '#1E3A8A',
           darkText: '#93C5FD',
         },
-        // Layered Neutral Canvas & Card Surfaces (Light & Dark)
+        // Layered Neutral Canvas & Card Surfaces (Government Light & Slate Dark)
         canvas: {
-          light: '#EDF1F6',
-          dark: '#09121E',
+          light: '#F3F1EC', // Soft natural canvas (no pure-white glare)
+          dark: '#192630',  // Layered slate-navy
         },
         surface: {
-          cardLight: '#F8FAFC',
-          cardDark: '#14253D',
+          cardLight: '#FBFAF7',
+          cardDark: '#223440',
           elevatedLight: '#FFFFFF',
-          elevatedDark: '#1B304E',
-          subtleLight: '#E8EEF5',
-          subtleDark: '#0E1B2D',
-          borderLight: '#D6DFE8',
-          borderDark: '#223C5F',
+          elevatedDark: '#2B3F4C',
+          subtleLight: '#EBE8E1',
+          subtleDark: '#1D2D38',
+          borderLight: '#E7E8E5',
+          borderDark: '#3B4F5C',
+          textPrimaryLight: '#344454',
+          textMutedLight: '#71808C',
+          textPrimaryDark: '#EDF1F3',
+          textMutedDark: '#B3C0C9',
         }
       },
       fontFamily: {

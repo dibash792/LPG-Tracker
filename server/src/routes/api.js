@@ -45,6 +45,7 @@ router.post('/stock/adjust', authenticateToken, stockCtrl.recordStockAdjustment)
 // 7. Public Availability & Grievance (Accessible without auth token)
 router.get('/public/availability', publicCtrl.getPublicAvailability);
 router.post('/public/complaints', publicCtrl.submitCitizenComplaint);
+router.get('/public/complaints/:ticketNumber', publicCtrl.getComplaintStatus);
 
 // 8. Audit Ledger
 router.get('/audit/logs', authenticateToken, requireRole(['NOC_SUPER_ADMIN', 'NOC_INSPECTOR']), auditCtrl.getAuditLogs);

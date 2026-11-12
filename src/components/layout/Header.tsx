@@ -34,6 +34,7 @@ interface HeaderProps {
   isSyncing: boolean;
   activeRole: UserRoleContext;
   onSelectRole: (role: UserRoleContext) => void;
+  onGoToPublic?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -45,6 +46,7 @@ export const Header: React.FC<HeaderProps> = ({
   isSyncing,
   activeRole,
   onSelectRole,
+  onGoToPublic,
 }) => {
   const { language, setLanguage, t, dateBS } = useLanguage();
   const { notifications, unreadCount, markAsRead, markAllAsRead, showToast } = useNotifications();
@@ -147,7 +149,19 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Right: Theme Toggle, Role Switcher, Language, Live Sync, Alerts */}
       <div className="flex items-center space-x-2 sm:space-x-3">
         
-        {/* Theme Toggle (Light / Dark / System) */}
+        {/* Switch to Public Portal Button */}
+        {onGoToPublic && (
+          <button
+            onClick={onGoToPublic}
+            className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl text-brand-900 dark:text-slate-100 bg-brand-50 dark:bg-brand-850 hover:bg-brand-100 dark:hover:bg-brand-800 border border-brand-200 dark:border-brand-700 transition-colors shadow-2xs"
+            title="Switch to Citizen Public Portal"
+          >
+            <Globe className="w-3.5 h-3.5 text-flame-500" />
+            <span>Public Portal</span>
+          </button>
+        )}
+
+        {/* Theme Toggle */}
         <ThemeToggle />
 
         {/* Interactive Role Switcher Selector */}
@@ -203,6 +217,21 @@ export const Header: React.FC<HeaderProps> = ({
                   );
                 })}
               </div>
+
+              {onGoToPublic && (
+                <div className="p-2 border-t border-slate-200 dark:border-brand-850 bg-slate-50 dark:bg-brand-950">
+                  <button
+                    onClick={() => {
+                      setShowRoleMenu(false);
+                      onGoToPublic();
+                    }}
+                    className="w-full flex items-center justify-center space-x-2 py-2 px-3 text-xs font-bold rounded-xl bg-flame-600 hover:bg-flame-500 text-white transition-colors shadow-2xs"
+                  >
+                    <Globe className="w-3.5 h-3.5" />
+                    <span>Return to Public Citizen Portal</span>
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

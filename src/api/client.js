@@ -114,6 +114,17 @@ class ApiClient {
     });
   }
 
+  trackComplaint(ticketNumber) {
+    return this.request(`/public/complaints/${ticketNumber}`);
+  }
+
+  registerOrganization(payload) {
+    return this.request('/auth/register-organization', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+
   // Audit
   getAuditLogs(limit = 50) {
     return this.request(`/audit/logs?limit=${limit}`);

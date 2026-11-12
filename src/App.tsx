@@ -28,6 +28,8 @@ import { PlantOperatorPortal } from './components/roles/PlantOperatorPortal';
 import { DistributorPortal } from './components/roles/DistributorPortal';
 import { RetailerPortal } from './components/roles/RetailerPortal';
 import { PublicConsumerPortal } from './components/roles/PublicConsumerPortal';
+import { PublicWebsite } from './components/public/PublicWebsite';
+import { AuthModal } from './components/auth/AuthModal';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { NotificationProvider, useNotifications } from './context/NotificationContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
@@ -43,6 +45,11 @@ const AppContent: React.FC = () => {
 
   // Role Context State
   const [activeRole, setActiveRole] = useState<UserRoleContext>('NOC_SUPER_ADMIN');
+
+  // Public View vs Operator Console State
+  const [isPublicView, setIsPublicView] = useState<boolean>(true);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [authModalMode, setAuthModalMode] = useState<'LOGIN' | 'REGISTER'>('LOGIN');
 
   // Navigation State
   const [currentTab, setCurrentTab] = useState<NavigationTab>('dashboard');
@@ -347,6 +354,71 @@ const AppContent: React.FC = () => {
   const pendingApprovalsCount = organizations.filter(o => o.status === 'PENDING_APPROVAL').length;
   const activeDiscrepanciesCount = discrepancies.filter(d => d.status !== 'RESOLVED').length;
 
+  // New Organization Self-Registration Handler
+  const handleRegisterOrganization = (newOrg: Organization) => {
+    setOrganizations(prev => [newOrg, ...prev]);
+    setMetrics(m => ({ ...m, pendingApprovalsCount: m.pendingApprovalsCount + 1 }));
+    showToast(`Registration for ${newOrg.name} submitted for NOC review.`, 'success');
+    addNotification({
+      title: 'New Organization Registration Pending Review',
+      description: `${newOrg.name} (${newOrg.type.replace(/_/g, ' ')}) registered under Reg #${newOrg.regNumber}. Review in Entity Approvals.`,
+      type: 'WARNING',
+    });
+    setIsAuthModalOpen(false);
+  };
+
+  // If in Citizen Public Mode, render dedicated Public Experience with modal overlays
+  if (isPublicView) {
+    return (
+      <div className="min-h-screen bg-[#F3F1EC] dark:bg-[#192630] text-slate-800 dark:text-slate-100 transition-colors duration-150">
+        <PublicWebsite
+          onOpenAuth={(mode) => {
+            setAuthModalMode(mode || 'LOGIN');
+            setIsAuthModalOpen(true);
+          }}
+          onEnterOperatorConsole={() => {
+            setIsPublicView(false);
+          }}
+        />
+
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+          initialMode={authModalMode}
+          onLoginSuccess={(role) => {
+            setActiveRole(role);
+            setIsPublicView(false);
+            setIsAuthModalOpen(false);
+            showToast(`Signed into console as ${role.replace(/_/g, ' ')}`, 'success');
+          }}
+          onRegisterOrganization={handleRegisterOrganization}
+        />
+
+        {/* Floating Toast Notification */}
+        {toast && (
+          <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-5 duration-200 shadow-dropdown">
+            <div className={`px-4 py-3 rounded-2xl flex items-center space-x-2.5 text-xs font-semibold border ${
+              toast.type === 'error'
+                ? 'bg-red-900 text-white border-red-800'
+                : toast.type === 'info'
+                  ? 'bg-brand-950 text-white border-brand-800'
+                  : 'bg-emerald-900 text-white border-emerald-800'
+            }`}>
+              {toast.type === 'error' ? (
+                <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+              ) : toast.type === 'info' ? (
+                <Info className="w-4 h-4 text-flame-400 shrink-0" />
+              ) : (
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              )}
+              <span>{toast.message}</span>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#EDF1F6] dark:bg-[#09121E] text-slate-800 dark:text-slate-100 flex transition-colors duration-150">
       
@@ -361,6 +433,7 @@ const AppContent: React.FC = () => {
           pendingApprovalsCount={pendingApprovalsCount}
           isOpenMobile={isMobileMenuOpen}
           onCloseMobile={() => setIsMobileMenuOpen(false)}
+          onGoToPublic={() => setIsPublicView(true)}
         />
       )}
 
@@ -379,6 +452,7 @@ const AppContent: React.FC = () => {
           isSyncing={isSyncing}
           activeRole={activeRole}
           onSelectRole={setActiveRole}
+          onGoToPublic={() => setIsPublicView(true)}
         />
 
         {/* Brand Infrastructure Identity Banner */}
@@ -562,6 +636,19 @@ const AppContent: React.FC = () => {
         </footer>
 
       </div>
+
+      {/* Global Auth & Registration Modal for Operator Console */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        initialMode={authModalMode}
+        onLoginSuccess={(role) => {
+          setActiveRole(role);
+          setIsAuthModalOpen(false);
+          showToast(`Switched active console role to ${role.replace(/_/g, ' ')}`, 'success');
+        }}
+        onRegisterOrganization={handleRegisterOrganization}
+      />
 
       {/* Floating Toast Notification */}
       {toast && (

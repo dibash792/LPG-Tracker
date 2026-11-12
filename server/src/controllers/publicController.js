@@ -97,3 +97,29 @@ export const submitCitizenComplaint = (req, res) => {
   });
 };
 
+export const getComplaintStatus = (req, res) => {
+  const { ticketNumber } = req.params;
+  const complaint = db.complaints.find(c => 
+    c.ticket_number?.toLowerCase() === ticketNumber?.toLowerCase() || 
+    c.id === ticketNumber
+  );
+
+  if (!complaint) {
+    return res.status(404).json({ 
+      success: false, 
+      message: `No grievance found matching reference '${ticketNumber}'. Please check the ticket number.` 
+    });
+  }
+
+  return res.json({
+    success: true,
+    complaint: {
+      ...complaint,
+      investigationDepartment: 'NOC Consumer Grievance & Price Surveillance Directorate',
+      resolutionNote: complaint.status === 'RESOLVED' 
+        ? 'Field inspection verified price compliance. Corrective notice issued to retailer.'
+        : 'Assigned to Area Inspector for on-site weighbridge & price audit.'
+    }
+  });
+};
+

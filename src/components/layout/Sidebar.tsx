@@ -13,7 +13,8 @@ import {
   ChevronRight,
   CheckCircle,
   HelpCircle,
-  Radio
+  Radio,
+  Globe
 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { BrandLogo } from '../common/BrandLogo';
@@ -38,6 +39,7 @@ interface SidebarProps {
   pendingApprovalsCount: number;
   isOpenMobile: boolean;
   onCloseMobile: () => void;
+  onGoToPublic?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -49,6 +51,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   pendingApprovalsCount,
   isOpenMobile,
   onCloseMobile,
+  onGoToPublic,
 }) => {
   const { t, language } = useLanguage();
 
@@ -213,6 +216,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* System & Trust Footer */}
         <div className="p-3 border-t border-brand-800/80 dark:border-brand-900 bg-brand-950/60">
+          {onGoToPublic && (
+            <button
+              onClick={() => {
+                onCloseMobile();
+                onGoToPublic();
+              }}
+              className={`w-full flex items-center rounded-xl font-semibold transition-all duration-150 mb-3 text-flame-400 hover:text-white bg-brand-900/90 hover:bg-flame-600 border border-brand-800 shadow-2xs ${
+                collapsed ? 'justify-center p-3' : 'px-3 py-2 space-x-2.5 text-xs'
+              }`}
+              title="Return to Citizen Public Portal"
+            >
+              <Globe className="w-4 h-4 shrink-0 text-flame-400 group-hover:text-white" />
+              {!collapsed && (
+                <span>{language === 'ne' ? 'नागरिक पोर्टल' : 'Citizen Portal'}</span>
+              )}
+            </button>
+          )}
+
           {!collapsed ? (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs text-slate-400">
